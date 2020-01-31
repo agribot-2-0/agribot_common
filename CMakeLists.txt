@@ -4,7 +4,7 @@ project(agribot_common)
 find_package(catkin REQUIRED)
 
 catkin_package(
-  LIBRARIES agribot_common
+  LIBRARIES ${PROJECT_NAME} agribot_common
 )
 
 ###########
