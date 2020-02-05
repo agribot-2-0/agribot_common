@@ -4,6 +4,7 @@ project(agribot_common)
 find_package(catkin REQUIRED)
 
 catkin_package(
+  INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} agribot_common
 )
 
