@@ -2,7 +2,7 @@ The standard.rc file contains the standard, unmodified pylint convention
 
 pylint is using .pylintrc file to read current configuration, like disabled warining types and maximal line length. You may modify this file, current modifications (differences from standard.rc) for Agribot projects are:
 
-- disabling: missing-docstring
+- disabling: missing-docstring, import-error
 - dis-disabling: invalid-name
 - changing file_name_convention to 'any', for the rest (variables, methods etc) it is still snake_case
 
