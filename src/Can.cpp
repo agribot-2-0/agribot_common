@@ -20,7 +20,7 @@ int Can::iInitialize(char* pchCanChannel)
         return -1;
     }
 
-    strcpy(_ifr.ifr_name, pchCanChannel);
+    snprintf(_ifr.ifr_name, sizeof(&pchCanChannel), pchCanChannel);
     ioctl(_iFileDesc, SIOCGIFINDEX, &_ifr);
 
     Addr.can_family  = AF_CAN;
