@@ -2,7 +2,7 @@
 
 class AgribotComponent
 {
-public:
+ public:
     virtual int configure() = 0;
     virtual bool startup() = 0;
     virtual bool update() = 0;
