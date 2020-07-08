@@ -87,7 +87,11 @@ disable=import-error,
         next-method-defined,
         dict-items-not-iterating,
         dict-keys-not-iterating,
-        dict-values-not-iterating
+        dict-values-not-iterating,
+	global-statement,
+	deprecated-lambda,
+	no-else-return
+	
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -461,7 +465,7 @@ max-parents=7
 max-public-methods=20
 
 # Maximum number of return / yield for function / method body
-max-returns=6
+max-returns=7
 
 # Maximum number of statements in function / method body
 max-statements=50
