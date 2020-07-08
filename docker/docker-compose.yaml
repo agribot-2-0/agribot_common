@@ -6,3 +6,7 @@ services:
     - "8082:8080"
     volumes:
     - ~/mapproxy:/mapproxy
+  nginx-rtmp:
+    image: tiangolo/nginx-rtmp
+    ports:
+    - "1935:1935"
