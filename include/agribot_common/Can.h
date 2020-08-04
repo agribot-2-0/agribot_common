@@ -27,7 +27,7 @@ class Can
  public:
     Can();
     // return: if 0 - config success, below 0 - config failed
-    int iInitialize(char* pchCanChannel);
+    int iInitialize(const char* pchCanChannel);
     // true - frame received, false - no new frames
     bool bReceiveFrame(can_frame* frame);
     // example can frame to send:

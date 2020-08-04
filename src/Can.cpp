@@ -3,13 +3,14 @@
 */
 
 #include <agribot_common/Can.h>
+#include <string.h>
 
 Can::Can()
 {
     _iFileDesc = 0;
 }
 
-int Can::iInitialize(char* pchCanChannel)
+int Can::iInitialize(const char* pchCanChannel)
 {
     struct sockaddr_can Addr;
     int iRet = 0;
@@ -24,7 +25,7 @@ int Can::iInitialize(char* pchCanChannel)
         return -1;
     }
 
-    snprintf(_ifr.ifr_name, sizeof(&pchCanChannel), pchCanChannel);
+    snprintf(_ifr.ifr_name, sizeof(&pchCanChannel),"%s", pchCanChannel);
     ioctl(_iFileDesc, SIOCGIFINDEX, &_ifr);
 
     Addr.can_family  = AF_CAN;
