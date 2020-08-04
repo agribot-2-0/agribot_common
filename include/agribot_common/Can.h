@@ -28,6 +28,8 @@ class Can
     Can();
     // return: if 0 - config success, below 0 - config failed
     int iInitialize(const char* pchCanChannel);
+    //deprecated constructor, should be avoided
+    int iInitialize(char* pchCanChannel);
     // true - frame received, false - no new frames
     bool bReceiveFrame(can_frame* frame);
     // example can frame to send:
