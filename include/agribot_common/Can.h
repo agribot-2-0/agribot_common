@@ -4,21 +4,21 @@
 
 #pragma once
 
-#include <net/if.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <linux/can.h>
-#include <linux/can/raw.h>
-#include <linux/can/error.h>
 #include <fcntl.h>
+#include <linux/can.h>
+#include <linux/can/error.h>
+#include <linux/can/raw.h>
+#include <net/if.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <unistd.h>
 
-#include <sstream>
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <sstream>
 
 class Can
 {
@@ -29,8 +29,7 @@ public:
   Can();
   // return: if 0 - config success, below 0 - config failed
   int iInitialize(const char* pchCanChannel);
-  // deprecated constructor, should be avoided
-  int iInitialize(char* pchCanChannel);
+
   // true - frame received, false - no new frames
   bool bReceiveFrame(can_frame* frame);
   // example can frame to send:
