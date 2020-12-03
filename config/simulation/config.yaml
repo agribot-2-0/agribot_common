@@ -1,3 +1,6 @@
+perception_sensors: False
+perception_plugins: False
+
 # Drzewna location
 # simulation_latitude: 51.113538
 # simulation_longitude: 17.019918
