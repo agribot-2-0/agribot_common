@@ -1,4 +1,5 @@
-chassis_length: 2.42
+robot_length: 2.1
+
 chassis_width: 1.05
 chassis_height: 1.65
 chassis_mass: 2000
