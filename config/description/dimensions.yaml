@@ -1,9 +1,0 @@
-robot_length: 2.1
-
-chassis_width: 1.05
-chassis_height: 1.65
-chassis_mass: 2000
-
-wheel_width: 0.025
-wheel_radius: 0.16
-wheel_mass: 50

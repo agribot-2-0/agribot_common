@@ -31,11 +31,6 @@ install(DIRECTORY include/${PROJECT_NAME}/
   PATTERN ".svn" EXCLUDE
 )
 
-install(DIRECTORY config key
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-  PATTERN ".svn" EXCLUDE
-)
-
 install(PROGRAMS
   tools/rosbag_postprocessing/check_tf_stamp_ascending.py
   tools/rosbag_postprocessing/check_tf_stamp_diff.py
