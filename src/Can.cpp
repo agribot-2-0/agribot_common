@@ -76,3 +76,9 @@ int Can::iSendFrame(can_frame* frame)
   (*frame).can_id = (*frame).can_id | CAN_EFF_FLAG;
   return write(_iFileDesc, frame, sizeof(struct can_frame));
 }
+
+int Can::iSendFrameNonExtended(can_frame* frame)
+{
+  (*frame).can_id = (*frame).can_id;
+  return write(_iFileDesc, frame, sizeof(struct can_frame));
+}

@@ -39,4 +39,5 @@ public:
   // ...
   // frame.data[7] = 0x8;
   int iSendFrame(can_frame* frame);
+  int iSendFrameNonExtended(can_frame* frame);
 };
