@@ -14,7 +14,8 @@ int Can::iInitialize(const char* pchCanChannel)
 {
   struct sockaddr_can Addr;
   int iRet = 0;
-  can_err_mask_t ErrMask = CAN_ERR_TX_TIMEOUT | CAN_ERR_BUSOFF;
+  can_err_mask_t ErrMask = CAN_ERR_TX_TIMEOUT | CAN_ERR_LOSTARB | CAN_ERR_CRTL | CAN_ERR_PROT |
+                           CAN_ERR_TRX | CAN_ERR_ACK | CAN_ERR_BUSOFF | CAN_ERR_BUSERROR | CAN_ERR_RESTARTED;
   struct ifreq _ifr;
 
   _iFileDesc = socket(PF_CAN, SOCK_RAW, CAN_RAW);
@@ -59,7 +60,8 @@ bool Can::bReceiveFrame(can_frame* frame)
   {
     if ((*frame).can_id & CAN_ERR_FLAG)
     {
-      std::cerr << "Error frame" << std::endl;
+      std::cerr << "Error frame with id: " << std::hex << (int)(*frame).can_id <<  std::endl;
+      std::cerr << "data[1] = " << std::hex << (int)(*frame).data[1] << std::endl;
     }
     else
     {
