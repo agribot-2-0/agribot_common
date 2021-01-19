@@ -38,5 +38,5 @@ public:
   // frame.data[0] = 0x1;
   // ...
   // frame.data[7] = 0x8;
-  int iSendFrame(can_frame* frame);
+  int iSendFrame(can_frame* frame, bool extended_id = true);
 };
