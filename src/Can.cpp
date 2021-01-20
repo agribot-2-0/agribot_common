@@ -73,8 +73,11 @@ bool Can::bReceiveFrame(can_frame* frame)
 
 // IF we use extended frames
 // then we need to do (*frame).can_id = (*frame).can_id | CAN_EFF_FLAG;;
-int Can::iSendFrame(can_frame* frame)
+int Can::iSendFrame(can_frame* frame, bool extended_id)
 {
-  (*frame).can_id = (*frame).can_id | CAN_EFF_FLAG;
+  if (extended_id)
+  {
+    frame->can_id = frame->can_id | CAN_EFF_FLAG;
+  }
   return write(_iFileDesc, frame, sizeof(struct can_frame));
 }
