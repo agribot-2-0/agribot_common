@@ -52,7 +52,7 @@ int Can::iInitialize(const char* pchCanChannel)
   return SocketInitCode::SUCCESS;
 }
 
-void Can::monitor_can_error_frames_size()
+void Can::monitorCanErrorFramesSize()
 {
   if (max_error_frames_size > can_error_frames_.size())
   {
@@ -60,9 +60,9 @@ void Can::monitor_can_error_frames_size()
   }
 }
 
-void Can::add_error_to_can_error_frames(can_frame* frame)
+void Can::addErrorToCanErrorFrames(can_frame* frame)
 {
-  monitor_can_error_frames_size();
+  monitorCanErrorFramesSize();
   can_error_frames_.push_back(*frame);
 }
 
@@ -72,7 +72,7 @@ bool Can::bReceiveFrame(can_frame* frame)
   {
     if (frame->can_id & CAN_ERR_FLAG)
     {
-      add_error_to_can_error_frames(frame);
+      addErrorToCanErrorFrames(frame);
     }
     else
     {
