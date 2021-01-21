@@ -28,10 +28,7 @@ class Can
 {
 private:
   int _iFileDesc;
-  std::vector<can_frame> can_error_frames_;
 
-  void monitor_can_error_frames_size();
-  void add_error_to_can_error_frames(can_frame* frame);
 public:
   Can();
   // return: if 0 - config success, below 0 - config failed
