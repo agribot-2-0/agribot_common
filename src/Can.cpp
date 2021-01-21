@@ -3,7 +3,6 @@
  */
 
 #include <agribot_common/Can.h>
-#include <string.h>
 
 Can::Can()
 {
@@ -14,15 +13,16 @@ int Can::iInitialize(const char* pchCanChannel)
 {
   struct sockaddr_can Addr;
   int iRet = 0;
-  can_err_mask_t ErrMask = CAN_ERR_TX_TIMEOUT | CAN_ERR_BUSOFF;
+  // Capture all errors described in:
+  // https://github.com/linux-can/can-utils/blob/master/include/linux/can/error.h
+  can_err_mask_t ErrMask = 0x1ff;
   struct ifreq _ifr;
 
   _iFileDesc = socket(PF_CAN, SOCK_RAW, CAN_RAW);
 
   if (_iFileDesc < 0)
   {
-    std::cerr << "Error while opening socket" << std::endl;
-    return -1;
+    return SocketInitCode::ERROR_WHILE_OPENING_SOCKET;
   }
 
   snprintf(_ifr.ifr_name, sizeof(&pchCanChannel), "%s", pchCanChannel);
@@ -33,33 +33,30 @@ int Can::iInitialize(const char* pchCanChannel)
 
   if (bind(_iFileDesc, (struct sockaddr*)&Addr, sizeof(Addr)) < 0)
   {
-    std::cerr << "Error in socket bind" << std::endl;
-    return -2;
+    return SocketInitCode::ERROR_IN_SOCKET_BIND;
   }
 
   iRet = fcntl(_iFileDesc, F_SETFL, O_NONBLOCK);
   if (iRet != 0)
   {
-    std::cerr << "Fcntl fail" << std::endl;
-    return -3;
+    return SocketInitCode::FCNTL_FAIL;
   }
 
   iRet = setsockopt(_iFileDesc, SOL_CAN_RAW, CAN_RAW_ERR_FILTER, &ErrMask, sizeof(ErrMask));
   if (iRet != 0)
   {
-    std::cerr << "Setsockopt fail" << std::endl;
-    return -4;
+    return SocketInitCode::SETSOCKOPT_FAIL;
   }
-  return 0;
+  return SocketInitCode::SUCCESS;
 }
 
 bool Can::bReceiveFrame(can_frame* frame)
 {
   if (read(_iFileDesc, frame, sizeof((*frame))) > 0)
   {
-    if ((*frame).can_id & CAN_ERR_FLAG)
+    if (frame->can_id & CAN_ERR_FLAG)
     {
-      std::cerr << "Error frame" << std::endl;
+      std::cerr << "[CAN] Error frame received with id: 0x" << std::hex << frame->can_id << std::endl;
     }
     else
     {

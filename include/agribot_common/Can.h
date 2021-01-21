@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <agribot_common/SocketInitCode.h>
+
 #include <fcntl.h>
 #include <linux/can.h>
 #include <linux/can/error.h>
