@@ -56,7 +56,7 @@ bool Can::bReceiveFrame(can_frame* frame)
   {
     if (frame->can_id & CAN_ERR_FLAG)
     {
-      std::cerr << "error frame received with id: 0x" << std::hex << frame->can_id << std::endl;
+      std::cerr << "[CAN] Error frame received with id: 0x" << std::hex << frame->can_id << std::endl;
     }
     else
     {
