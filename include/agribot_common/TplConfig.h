@@ -2,6 +2,8 @@
  * Copyright (C) 2021 Agribot. All rights reserved.
  */
 
+#pragma once
+
 namespace tool_manager
 {
 
