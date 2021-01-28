@@ -12,7 +12,7 @@ catkin_package(
 ## Build ##
 ###########
 include_directories(include/)
-add_library(agribot_common src/Can.cpp)
+add_library(agribot_common src/Can.cpp src/CanFrame.cpp)
 
 #############
 ## Install ##
