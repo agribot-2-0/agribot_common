@@ -22,16 +22,11 @@
 #include <iostream>
 #include <sstream>
 
-#include <vector>
-
 class Can
 {
 private:
   int _iFileDesc;
-  std::vector<can_frame> can_error_frames_;
 
-  void monitorCanErrorFramesSize();
-  void addErrorToCanErrorFrames(can_frame* frame);
 public:
   Can();
   // return: if 0 - config success, below 0 - config failed

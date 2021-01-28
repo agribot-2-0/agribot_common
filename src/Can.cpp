@@ -4,8 +4,6 @@
 
 #include <agribot_common/Can.h>
 
-constexpr std::size_t max_error_frames_size = 100;
-
 Can::Can()
 {
   _iFileDesc = 0;
@@ -52,27 +50,13 @@ int Can::iInitialize(const char* pchCanChannel)
   return SocketInitCode::SUCCESS;
 }
 
-void Can::monitorCanErrorFramesSize()
-{
-  if (max_error_frames_size > can_error_frames_.size())
-  {
-    can_error_frames_.clear();
-  }
-}
-
-void Can::addErrorToCanErrorFrames(can_frame* frame)
-{
-  monitorCanErrorFramesSize();
-  can_error_frames_.push_back(*frame);
-}
-
 bool Can::bReceiveFrame(can_frame* frame)
 {
   if (read(_iFileDesc, frame, sizeof((*frame))) > 0)
   {
     if (frame->can_id & CAN_ERR_FLAG)
     {
-      addErrorToCanErrorFrames(frame);
+      std::cerr << "[CAN] Error frame received with id: 0x" << std::hex << frame->can_id << std::endl;
     }
     else
     {
