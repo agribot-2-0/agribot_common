@@ -55,7 +55,6 @@ class MagnetometerCalibration(object):
         self.logger('scale_z: {}'.format(self.scale_z))
 
     def save_parameters_to_yaml(self, file_path):
-        # magnetometer_offset_dict = [{'x': 'a', 'xx': 'aa'}, {'y': 'b'}]
         magnetometer_offset_dict = {
             'x': self.offset_x,
             'y': self.offset_y,
