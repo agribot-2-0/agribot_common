@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2020 Agribot. All rights reserved.
+ */
+
 #include <agribot_common/CanFrame.h>
 
 void CanFrame::setupFrame(const can_frame& frame)

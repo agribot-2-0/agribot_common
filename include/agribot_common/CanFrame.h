@@ -1,8 +1,14 @@
+/*
+ * Copyright (C) 2020 Agribot. All rights reserved.
+ */
+
 #pragma once
+
+#include <linux/can.h>
 
 #include <cstdint>
 #include <vector>
-#include <linux/can.h>
+
 
 class CanFrame
 {
