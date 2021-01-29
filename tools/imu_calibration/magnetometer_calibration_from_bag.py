@@ -14,7 +14,7 @@ class MagnetometerCalibrationFromBag(MagnetometerCalibration):
 
     def collect_data(self, magnetometer_topic, bag_path):
         self.logger(
-            '[Magnetometer calibration] Data collection from bag started...')
+            '[MagnetometerCalibration] Data collection from bag started...')
 
         with rosbag.Bag(bag_path) as inbag:
             for topic, msg, t in inbag.read_messages():
@@ -24,7 +24,7 @@ class MagnetometerCalibrationFromBag(MagnetometerCalibration):
                     self.z_list.append(msg.magnetic_field.z)
 
         self.logger(
-            '[Magnetometer calibration] Finished collecting data from {} bag...'
+            '[MagnetometerCalibration] Finished collecting data from {} bag...'
             .format(bag_path))
 
 

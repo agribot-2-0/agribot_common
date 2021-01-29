@@ -24,14 +24,14 @@ class MagnetometerCalibrationOnline(MagnetometerCalibration):
                                                      self.magnetometer_cb,
                                                      queue_size=100)
             self.logger(
-                '[Magnetometer calibration] Data collection online started...')
+                '[MagnetometerCalibration] Data collection online started...')
             self.logger(
-                '[Magnetometer calibration] Press Ctrl-C to stop data logging and compute parameters...'
+                '[MagnetometerCalibration] Press Ctrl-C to stop data logging and compute parameters...'
             )
             rospy.spin()  # Data is collected in magnetometer_cb
         except KeyboardInterrupt:
             self.logger(
-                '[Magnetometer calibration] Data collection stopped...')
+                '[MagnetometerCalibration] Data collection stopped...')
             self.magnetometer_sub.unregister()
 
 

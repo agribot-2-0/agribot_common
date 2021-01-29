@@ -76,7 +76,7 @@ class MagnetometerCalibration(object):
         with open(file_path, 'w') as file:
             yaml.dump(parameters_dict, file, default_flow_style=False)
 
-        self.logger('[Magnetometer calibration] Parameters saved to {}'.format(
+        self.logger('[MagnetometerCalibration] Parameters saved to {}'.format(
             file_path))
 
     def compute_corrected_data(self):
