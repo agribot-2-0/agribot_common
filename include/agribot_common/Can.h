@@ -5,6 +5,7 @@
 #pragma once
 
 #include <agribot_common/SocketInitCode.h>
+#include <agribot_common/CanFrame.h>
 
 #include <fcntl.h>
 #include <linux/can.h>
@@ -26,7 +27,7 @@ class Can
 {
 private:
   int _iFileDesc;
-
+  CanFrame most_recent_can_frame_;
 public:
   Can();
   // return: if 0 - config success, below 0 - config failed
@@ -41,4 +42,5 @@ public:
   // ...
   // frame.data[7] = 0x8;
   int iSendFrame(can_frame* frame, bool extended_id = true);
+  CanFrame getMostRecentCanFrame() const;
 };

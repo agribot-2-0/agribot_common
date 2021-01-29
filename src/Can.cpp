@@ -54,6 +54,7 @@ bool Can::bReceiveFrame(can_frame* frame)
 {
   if (read(_iFileDesc, frame, sizeof((*frame))) > 0)
   {
+    most_recent_can_frame_.setupFrame(*frame);
     if (frame->can_id & CAN_ERR_FLAG)
     {
       std::cerr << "[CAN] Error frame received with id: 0x" << std::hex << frame->can_id << std::endl;
@@ -75,4 +76,9 @@ int Can::iSendFrame(can_frame* frame, bool extended_id)
     frame->can_id = frame->can_id | CAN_EFF_FLAG;
   }
   return write(_iFileDesc, frame, sizeof(struct can_frame));
+}
+
+CanFrame Can::getMostRecentCanFrame() const
+{
+  return most_recent_can_frame_;
 }
