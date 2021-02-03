@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
         # Show and save parameters
         mc.print_parameters()
-        mc.save_parameters_to_yaml('./imu_bias_from_bag.yaml')
+        mc.save_parameters_to_yaml('./mag_bias_from_bag.yaml')
 
         # Compute and plot additional data
         mc.compute_corrected_data()
