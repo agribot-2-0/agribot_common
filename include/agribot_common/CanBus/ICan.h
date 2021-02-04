@@ -7,7 +7,7 @@
 #include <linux/can.h>
 #include <agribot_common/CanFrame.h>
 
-class CanInterface
+class ICan
 {
 public:
   virtual int iInitialize(const char* pchCanChannel) = 0;

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <agribot_common/CanBus/CanInterface.h>
+#include <agribot_common/CanBus/ICan.h>
 #include <agribot_common/SocketInitCode.h>
 #include <agribot_common/CanFrame.h>
 
@@ -24,7 +24,7 @@
 #include <iostream>
 #include <sstream>
 
-class Can : public CanInterface
+class Can : public ICan
 {
 private:
   int _iFileDesc;
