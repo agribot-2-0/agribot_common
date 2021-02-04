@@ -13,8 +13,7 @@ class ImuCalibrationFromBag(ImuCalibration):
         super(ImuCalibrationFromBag, self).__init__(print)
 
     def collect_data(self, imu_topic, bag_path):
-        self.logger(
-            '[ImuCalibration] Data collection from bag started...')
+        self.logger('[ImuCalibration] Data collection from bag started...')
 
         with rosbag.Bag(bag_path) as inbag:
             for topic, msg, t in inbag.read_messages():
@@ -27,16 +26,15 @@ class ImuCalibrationFromBag(ImuCalibration):
                     self.z_acc_list.append(msg.linear_acceleration.z)
 
         self.logger(
-            '[ImuCalibration] Finished collecting data from {} bag...'
-            .format(bag_path))
+            '[ImuCalibration] Finished collecting data from {} bag...'.format(
+                bag_path))
 
 
 if __name__ == '__main__':
     try:
         # Provide imu topic and /your/path/to/file.bag
         imu_topic = '/agribot/imu/raw/data'
-        # bag_path = '/your/path/to/file.bag'
-        bag_path = '/home/olek/agribot/logs/2_02_2021/imu_calib_only_imu.bag'
+        bag_path = '/your/path/to/file.bag'
 
         # Initialize
         ic = ImuCalibrationFromBag()
