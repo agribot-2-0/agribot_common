@@ -10,7 +10,7 @@
 class ICan
 {
 public:
-  ~ICan() {}
+  virtual ~ICan() {}
   virtual int iInitialize(const char* pchCanChannel) = 0;
   virtual bool bReceiveFrame(can_frame* frame) = 0;
   virtual int iSendFrame(can_frame* frame, bool extended_id = true) = 0;
