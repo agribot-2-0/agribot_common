@@ -27,6 +27,8 @@ class Firestore(object):
             for robot in robots_ref:
                 if robot.id == rsn:
                     uids.append(user.id)
+        if not uids:
+            raise ValueError("Robot is not assigned to any user")
         return uids
 
     def register_callback_on_collection_change(self, collection_path,
