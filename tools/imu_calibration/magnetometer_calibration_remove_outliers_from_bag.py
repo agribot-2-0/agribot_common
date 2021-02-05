@@ -74,7 +74,11 @@ class MagnetometerCalibrationRemoveOutliers(object):
         ]
 
         ax.plot(raw_x_list, raw_y_list, raw_z_list, 'r.', label='Raw')
-        ax.plot(processed_x_list, processed_y_list, processed_z_list, 'b.', label='Outliers removed')
+        ax.plot(processed_x_list,
+                processed_y_list,
+                processed_z_list,
+                'b.',
+                label='Outliers removed')
         ax.grid()
         ax.legend()
         plt.show()
@@ -95,31 +99,23 @@ if __name__ == '__main__':
     parser.add_argument('-r',
                         metavar='RADIUS',
                         required=False,
+                        default=1.0e-6,
                         help='neighbor search distance')
     parser.add_argument('-n',
                         metavar='MIN_NEIGHBORS_NUMBER',
                         required=False,
+                        default=10,
                         help='Mininaml number of neighbors in radius')
     args = parser.parse_args()
+
     inbag_path = args.i
     outbag_path = args.o
+    radius = float(args.r)
+    min_neighbors_number = int(args.n)
 
-    radius = 1.0e-6
-    min_neighbors_number = 10
-
-    if args.r is None:
-        print('RADIUS argument (-r) not set. Defaulting to {}'.format(radius))
-    else:
-        radius = float(args.r)
-        print('RADIUS argument set to {}'.format(radius))
-
-    if args.n is None:
-        print('MIN_NEIGHBORS_NUMBER argument (-n) not set. Defaulting to {}'.
-              format(min_neighbors_number))
-    else:
-        min_neighbors_number = int(args.n)
-        print('MIN_NEIGHBORS_NUMBER argument set to {}'.format(
-            min_neighbors_number))
+    print(
+        'Performing outliers removal with radius = {} and min_neighbors_number = {}'
+        .format(radius, min_neighbors_number))
 
     mcro = MagnetometerCalibrationRemoveOutliers()
     mcro.load_from_bag(inbag_path)
