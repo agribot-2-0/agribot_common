@@ -33,8 +33,8 @@ public:
   Can();
   // return: if 0 - config success, below 0 - config failed
   int iInitialize(const char* pchCanChannel) override;
-
   // true - frame received, false - no new frames
+  bool bReceiveFrame() override;
   bool bReceiveFrame(can_frame* frame) override;
   // example can frame to send:
   // frame.can_id  = 0x123;
