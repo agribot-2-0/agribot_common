@@ -62,8 +62,8 @@ class ImuCalibration(object):
             }
         }
 
-        with open(file_path, 'w') as file:
-            yaml.dump(parameters_dict, file, default_flow_style=False)
+        with open(file_path, 'w') as outfile:
+            yaml.dump(parameters_dict, outfile, default_flow_style=False)
 
         self.logger(
             '[ImuCalibration] Parameters saved to {}'.format(file_path))

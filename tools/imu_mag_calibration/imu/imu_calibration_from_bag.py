@@ -2,6 +2,7 @@
 
 from __future__ import print_function  # Necessary to pass print as argument in Python2
 
+import argparse
 import rospy
 import rosbag
 
@@ -32,20 +33,33 @@ class ImuCalibrationFromBag(ImuCalibration):
 
 if __name__ == '__main__':
     try:
-        # Provide imu topic and /your/path/to/file.bag
-        imu_topic = '/agribot/imu/raw/data'
-        bag_path = '/your/path/to/file.bag'
+        parser = argparse.ArgumentParser(
+            description='IMU calibration from bag')
+
+        parser.add_argument('-i',
+                            metavar='INPUT_BAGFILE',
+                            required=True,
+                            help='input bagfile')
+        parser.add_argument('-t',
+                            metavar='IMU_TOPIC',
+                            required=False,
+                            default='/agribot/imu/raw/data',
+                            help='IMU topic')
+        args = parser.parse_args()
+
+        inbag_path = args.i
+        topic = args.t
 
         # Initialize
-        ic = ImuCalibrationFromBag()
+        icfb = ImuCalibrationFromBag()
 
         # Collect data and compute parameters
-        ic.collect_data(imu_topic, bag_path)
-        ic.compute_offsets()
+        icfb.collect_data(topic, inbag_path)
+        icfb.compute_offsets()
 
         # Show and save parameters
-        ic.print_offsets()
-        ic.save_offsets_to_yaml('./imu_bias_from_bag.yaml')
+        icfb.print_offsets()
+        icfb.save_offsets_to_yaml('./imu_bias_from_bag.yaml')
 
     except rospy.ROSInterruptException:
         pass
