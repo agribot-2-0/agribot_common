@@ -37,13 +37,13 @@ class MagnetometerCalibration(object):
         self.offset_y = (max(self.y_list) + min(self.y_list)) / 2
         self.offset_z = (max(self.z_list) + min(self.z_list)) / 2
 
-        avg_delta_x = (max(self.x_list) - min(self.x_list)) / 2
-        avg_delta_y = (max(self.y_list) - min(self.y_list)) / 2
-        avg_delta_z = (max(self.z_list) - min(self.z_list)) / 2
+        delta_x = (max(self.x_list) - min(self.x_list)) / 2
+        delta_y = (max(self.y_list) - min(self.y_list)) / 2
+        delta_z = (max(self.z_list) - min(self.z_list)) / 2
 
-        self.scale_x = self.magnitude / avg_delta_x
-        self.scale_y = self.magnitude / avg_delta_y
-        self.scale_z = self.magnitude / avg_delta_z
+        self.scale_x = self.magnitude / delta_x
+        self.scale_y = self.magnitude / delta_y
+        self.scale_z = self.magnitude / delta_z
 
     def print_parameters(self):
         self.logger('offset_x: {}'.format(self.offset_x))
