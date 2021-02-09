@@ -8,9 +8,9 @@ from magnetometer_calibration import MagnetometerCalibration
 
 
 class MagnetometerCalibrationOnline(MagnetometerCalibration):
-    def __init__(self, magnitude):
+    def __init__(self, magnitude, previous_offset=None, previous_scale=None):
         super(MagnetometerCalibrationOnline,
-              self).__init__(rospy.loginfo, magnitude)
+              self).__init__(rospy.loginfo, magnitude, previous_offset, previous_scale)
 
     def magnetometer_cb(self, mag_msg):
         self.x_list.append(mag_msg.magnetic_field.x)
@@ -51,14 +51,28 @@ if __name__ == '__main__':
                             required=False,
                             default=4.9714e-5,
                             help='Magnetometer topic')
+        parser.add_argument(
+            '-pp',
+            metavar='PREVIOUS_PARAMETERS',
+            required=False,
+            default=None,
+            help='Previous parameters (parameters set when bag was logged)')
         args = parser.parse_args()
 
         topic = args.t
         magnitude = float(args.m)
+        pp_filepath = args.pp
 
         # Initialize
         rospy.init_node('magnetometer_calibration')
-        mco = MagnetometerCalibrationOnline(magnitude)
+
+        if pp_filepath is not None:
+            previous_offset, previous_scale = MagnetometerCalibration.load_previous_parameters_from_file(
+                pp_filepath)
+            mco = MagnetometerCalibrationOnline(magnitude, previous_offset,
+                                                  previous_scale)
+        else:
+            mco = MagnetometerCalibrationOnline(magnitude)
 
         # Collect data and compute parameters
         mco.collect_data(topic)
