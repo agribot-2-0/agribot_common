@@ -6,7 +6,11 @@ from mpl_toolkits.mplot3d import Axes3D
 
 
 class MagnetometerCalibration(object):
-    def __init__(self, logger, magnitude):
+    def __init__(self,
+                 logger,
+                 magnitude,
+                 previous_offset=None,
+                 previous_scale=None):
         self.logger = logger
 
         self.magnitude = magnitude
@@ -19,50 +23,77 @@ class MagnetometerCalibration(object):
         self.hard_corrected_y_list = []
         self.hard_corrected_z_list = []
 
-        self.hard_soft_corrected_x_list = []
-        self.hard_soft_corrected_y_list = []
-        self.hard_soft_corrected_z_list = []
+        self.corrected_x_list = []
+        self.corrected_y_list = []
+        self.corrected_z_list = []
 
-        self.offset_x = None
-        self.offset_y = None
-        self.offset_z = None
+        self.previous_offset = previous_offset
+        self.previous_scale = previous_scale
 
-        self.scale_x = None
-        self.scale_y = None
-        self.scale_z = None
+        self.offset = {}
+        self.scale = {}
 
     def compute_parameters(self):
+        min_dict = {
+            'x': min(self.x_list),
+            'y': min(self.y_list),
+            'z': min(self.z_list)
+        }
+        max_dict = {
+            'x': max(self.x_list),
+            'y': max(self.y_list),
+            'z': max(self.z_list)
+        }
+
+        if self.previous_offset is not None and self.previous_scale is not None:
+            self.logger(
+                '\n\n[IMPORTANT!!!] Previous parameters loaded. Calculating new parameters with respect to the previous ones\n\n'
+            )
+            min_dict['x'] /= self.previous_scale['x']
+            min_dict['x'] += self.previous_offset['x']
+            min_dict['y'] /= self.previous_scale['y']
+            min_dict['y'] += self.previous_offset['y']
+            min_dict['z'] /= self.previous_scale['z']
+            min_dict['z'] += self.previous_offset['z']
+
+            max_dict['x'] /= self.previous_scale['x']
+            max_dict['x'] += self.previous_offset['x']
+            max_dict['y'] /= self.previous_scale['y']
+            max_dict['y'] += self.previous_offset['y']
+            max_dict['z'] /= self.previous_scale['z']
+            max_dict['z'] += self.previous_offset['z']
+
         # Hard iron distortion filtration
-        self.offset_x = (max(self.x_list) + min(self.x_list)) / 2
-        self.offset_y = (max(self.y_list) + min(self.y_list)) / 2
-        self.offset_z = (max(self.z_list) + min(self.z_list)) / 2
+        self.offset['x'] = (max_dict['x'] + min_dict['x']) / 2
+        self.offset['y'] = (max_dict['y'] + min_dict['y']) / 2
+        self.offset['z'] = (max_dict['z'] + min_dict['z']) / 2
 
-        delta_x = (max(self.x_list) - min(self.x_list)) / 2
-        delta_y = (max(self.y_list) - min(self.y_list)) / 2
-        delta_z = (max(self.z_list) - min(self.z_list)) / 2
+        delta_x = (max_dict['x'] - min_dict['x']) / 2
+        delta_y = (max_dict['y'] - min_dict['y']) / 2
+        delta_z = (max_dict['z'] - min_dict['z']) / 2
 
-        self.scale_x = self.magnitude / delta_x
-        self.scale_y = self.magnitude / delta_y
-        self.scale_z = self.magnitude / delta_z
+        self.scale['x'] = self.magnitude / delta_x
+        self.scale['y'] = self.magnitude / delta_y
+        self.scale['z'] = self.magnitude / delta_z
 
     def print_parameters(self):
-        self.logger('offset_x: {}'.format(self.offset_x))
-        self.logger('offset_y: {}'.format(self.offset_y))
-        self.logger('offset_z: {}'.format(self.offset_z))
-        self.logger('scale_x: {}'.format(self.scale_x))
-        self.logger('scale_y: {}'.format(self.scale_y))
-        self.logger('scale_z: {}'.format(self.scale_z))
+        self.logger('offset_x: {}'.format(self.offset['x']))
+        self.logger('offset_y: {}'.format(self.offset['y']))
+        self.logger('offset_z: {}'.format(self.offset['z']))
+        self.logger('scale_x: {}'.format(self.scale['x']))
+        self.logger('scale_y: {}'.format(self.scale['y']))
+        self.logger('scale_z: {}'.format(self.scale['z']))
 
     def save_parameters_to_yaml(self, file_path):
         magnetometer_offset_dict = {
-            'x': self.offset_x,
-            'y': self.offset_y,
-            'z': self.offset_z
+            'x': self.offset['x'],
+            'y': self.offset['y'],
+            'z': self.offset['z']
         }
         magnetometer_scale_dict = {
-            'x': self.scale_x,
-            'y': self.scale_y,
-            'z': self.scale_z
+            'x': self.scale['x'],
+            'y': self.scale['y'],
+            'z': self.scale['z']
         }
         parameters_dict = {
             'hal/hydrabox/imu_bias': {
@@ -79,63 +110,72 @@ class MagnetometerCalibration(object):
 
     def compute_corrected_data(self):
         for x in self.x_list:
-            hard_corrected_x = x - self.offset_x
-            hard_corrected_x = hard_corrected_x * self.scale_x
-            self.hard_corrected_x_list.append(hard_corrected_x)
-            self.hard_soft_corrected_x_list.append(hard_corrected_x)
+            self.corrected_x_list.append(self.apply_correction(x, 'x'))
 
         for y in self.y_list:
-            hard_corrected_y = y - self.offset_y
-            hard_corrected_y = hard_corrected_y * self.scale_y
-            self.hard_corrected_y_list.append(hard_corrected_y)
-            self.hard_soft_corrected_y_list.append(hard_corrected_y)
+            self.corrected_y_list.append(self.apply_correction(y, 'y'))
 
         for z in self.z_list:
-            hard_corrected_z = z - self.offset_z
-            hard_corrected_z = hard_corrected_z * self.scale_z
-            self.hard_corrected_z_list.append(hard_corrected_z)
-            self.hard_soft_corrected_z_list.append(hard_corrected_z)
+            self.corrected_z_list.append(self.apply_correction(z, 'z'))
+
+    def apply_correction(self, value, axis):
+        corrected_value = value
+        if self.previous_offset is not None and self.previous_scale is not None:
+            corrected_value /= self.previous_scale[axis]
+            corrected_value += self.previous_offset[axis]
+
+        corrected_value -= self.offset[axis]
+        corrected_value *= self.scale[axis]
+
+        return corrected_value
 
     def plot_data(self):
         # Raw data
         fig1 = plt.figure()
-        ax1 = fig1.add_subplot(3, 1, 1)
+        ax1 = fig1.add_subplot(2, 1, 1)
         ax1.plot(self.x_list, self.y_list, 'r.')
         ax1.plot(self.x_list, self.z_list, 'b.')
         ax1.plot(self.y_list, self.z_list, 'c.')
         ax1.set(xlabel='', ylabel='', title='Raw magnetometer data.')
         ax1.grid()
 
-        ax2 = fig1.add_subplot(3, 1, 2)
-        ax2.plot(self.hard_corrected_x_list, self.hard_corrected_y_list, 'r.')
-        ax2.plot(self.hard_corrected_x_list, self.hard_corrected_z_list, 'b.')
-        ax2.plot(self.hard_corrected_y_list, self.hard_corrected_z_list, 'c.')
+        ax2 = fig1.add_subplot(2, 1, 2)
+        ax2.plot(self.corrected_x_list,
+                 self.corrected_y_list, 'r.')
+        ax2.plot(self.corrected_x_list,
+                 self.corrected_z_list, 'b.')
+        ax2.plot(self.corrected_y_list,
+                 self.corrected_z_list, 'c.')
         ax2.set(xlabel='',
                 ylabel='',
-                title='After hard iron distortion filtration.')
-        ax2.grid()
-
-        ax3 = fig1.add_subplot(3, 1, 3)
-        ax3.plot(self.hard_soft_corrected_x_list,
-                 self.hard_soft_corrected_y_list, 'r.')
-        ax3.plot(self.hard_soft_corrected_x_list,
-                 self.hard_soft_corrected_z_list, 'b.')
-        ax3.plot(self.hard_soft_corrected_y_list,
-                 self.hard_soft_corrected_z_list, 'c.')
-        ax3.set(xlabel='',
-                ylabel='',
                 title='After soft and hard iron distortion filtration.')
-        ax3.grid()
+        ax2.grid()
 
         fig2 = plt.figure()
 
-        ax4 = fig2.add_subplot(1, 1, 1, projection='3d')
-        ax4.plot(self.x_list, self.y_list, self.z_list, 'r.', label='Before filtration')
-        ax4.plot(self.hard_soft_corrected_x_list,
-                 self.hard_soft_corrected_y_list,
-                 self.hard_soft_corrected_z_list, 'b.', label='After filtration')
-        ax4.set(xlabel='', ylabel='', title='3D before and after filtration')
-        ax4.legend()
-        ax4.grid()
+        ax3 = fig2.add_subplot(1, 1, 1, projection='3d')
+        ax3.plot(self.x_list,
+                 self.y_list,
+                 self.z_list,
+                 'r.',
+                 label='Before filtration')
+        ax3.plot(self.corrected_x_list,
+                 self.corrected_y_list,
+                 self.corrected_z_list,
+                 'b.',
+                 label='After filtration')
+        ax3.set(xlabel='', ylabel='', title='3D before and after filtration')
+        ax3.legend()
+        ax3.grid()
 
         plt.show()
+
+    @staticmethod
+    def load_previous_parameters_from_file(filepath):
+        with open(filepath) as file:
+            parameters_dict = yaml.load(file)
+            offset_dict = parameters_dict['hal/hydrabox/imu_bias'][
+                'magnetometer_offset']
+            scale_dict = parameters_dict['hal/hydrabox/imu_bias'][
+                'magnetometer_scale']
+            return offset_dict, scale_dict

@@ -10,8 +10,9 @@ from magnetometer_calibration import MagnetometerCalibration
 
 
 class MagnetometerCalibrationFromBag(MagnetometerCalibration):
-    def __init__(self, magnitude):
-        super(MagnetometerCalibrationFromBag, self).__init__(print, magnitude)
+    def __init__(self, magnitude, previous_offset=None, previous_scale=None):
+        super(MagnetometerCalibrationFromBag,
+              self).__init__(print, magnitude, previous_offset, previous_scale)
 
     def collect_data(self, magnetometer_topic, bag_path):
         self.logger(
@@ -48,14 +49,26 @@ if __name__ == '__main__':
                             required=False,
                             default=4.9714e-5,
                             help='Magnetometer topic')
+        parser.add_argument(
+            '-pp',
+            metavar='PREVIOUS_PARAMETERS',
+            required=False,
+            default=None,
+            help='Previous parameters (parameters set when bag was logged)')
         args = parser.parse_args()
 
         inbag_path = args.i
         topic = args.t
         magnitude = float(args.m)
+        pp_filepath = args.pp
 
-        # Initialize
-        mcfb = MagnetometerCalibrationFromBag(magnitude)
+        if pp_filepath is not None:
+            previous_offset, previous_scale = MagnetometerCalibration.load_previous_parameters_from_file(
+                pp_filepath)
+            mcfb = MagnetometerCalibrationFromBag(magnitude, previous_offset,
+                                                  previous_scale)
+        else:
+            mcfb = MagnetometerCalibrationFromBag(magnitude)
 
         # Collect data and compute parameters
         mcfb.collect_data(topic, inbag_path)
