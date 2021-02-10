@@ -20,7 +20,7 @@ class MagnetometerCalibrationRemoveOutliers(object):
             with rosbag.Bag(bag_path) as inbag:
                 for topic, msg, t in inbag.read_messages():
                     if topic == '/agribot/imu/raw/mag':
-                        d = {'topic': topic, 't': t, 'msg': msg.magnetic_field}
+                        d = {'topic': topic, 't': t, 'msg': msg}
                         self.magnetic_field_msgs.append(d)
         except IOError as e:
             print(e)
@@ -39,13 +39,18 @@ class MagnetometerCalibrationRemoveOutliers(object):
 
     def remove_outliers(self, radius, min_neighbors_number):
         # Create KDTree object
-        buf = [[d['msg'].x, d['msg'].y, d['msg'].z]
-               for d in self.magnetic_field_msgs]
+        buf = [[
+            d['msg'].magnetic_field.x, d['msg'].magnetic_field.y,
+            d['msg'].magnetic_field.z
+        ] for d in self.magnetic_field_msgs]
         tree = KDTree(np.array(buf))
         outliers_removed_cnt = 0
 
         for d in self.magnetic_field_msgs:
-            point = [d['msg'].x, d['msg'].y, d['msg'].z]
+            point = [
+                d['msg'].magnetic_field.x, d['msg'].magnetic_field.y,
+                d['msg'].magnetic_field.z
+            ]
             neighbors = tree.query_ball_point(x=point, r=radius)
 
             if len(neighbors) >= min_neighbors_number:
@@ -59,18 +64,27 @@ class MagnetometerCalibrationRemoveOutliers(object):
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
-        raw_x_list = [d['msg'].x for d in self.magnetic_field_msgs]
-        raw_y_list = [d['msg'].y for d in self.magnetic_field_msgs]
-        raw_z_list = [d['msg'].z for d in self.magnetic_field_msgs]
+        raw_x_list = [
+            d['msg'].magnetic_field.x for d in self.magnetic_field_msgs
+        ]
+        raw_y_list = [
+            d['msg'].magnetic_field.y for d in self.magnetic_field_msgs
+        ]
+        raw_z_list = [
+            d['msg'].magnetic_field.z for d in self.magnetic_field_msgs
+        ]
 
         processed_x_list = [
-            d['msg'].x for d in self.processed_magnetic_field_msgs
+            d['msg'].magnetic_field.x
+            for d in self.processed_magnetic_field_msgs
         ]
         processed_y_list = [
-            d['msg'].y for d in self.processed_magnetic_field_msgs
+            d['msg'].magnetic_field.y
+            for d in self.processed_magnetic_field_msgs
         ]
         processed_z_list = [
-            d['msg'].z for d in self.processed_magnetic_field_msgs
+            d['msg'].magnetic_field.z
+            for d in self.processed_magnetic_field_msgs
         ]
 
         ax.plot(raw_x_list, raw_y_list, raw_z_list, 'r.', label='Raw')
