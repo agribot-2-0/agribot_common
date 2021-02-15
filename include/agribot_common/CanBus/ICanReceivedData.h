@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <agribot_common/CanFrame.h>
 #include <vector>
 #include <optional>
 #include <cstdint>
@@ -17,7 +18,7 @@ class ICanReceivedData
 
  public:
   virtual ~ICanReceivedData(){}
-  virtual void assembleValueFromFrame(const std::vector<uint8_t>& data) = 0;
+  virtual void assembleValueFromFrame(const CanFrame& can_frame) = 0;
   virtual std::optional<T> getAssembledValue() const = 0;
   virtual void resetParsedFlag() = 0;
 };
