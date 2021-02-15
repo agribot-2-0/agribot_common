@@ -21,6 +21,11 @@ inline std::int8_t getI8(std::uint8_t start_byte, const std::vector<std::uint8_t
   return data[start_byte];
 }
 
+inline std::uint8_t getU8(std::uint8_t start_byte, const std::vector<std::uint8_t>& data)
+{
+  return data[start_byte];
+}
+
 inline std::int16_t getI16Lsbf(std::uint8_t start_byte, const std::vector<std::uint8_t>& data)
 {
   return static_cast<std::int16_t>((static_cast<std::int16_t>(data[start_byte + 1]) << 8) |
