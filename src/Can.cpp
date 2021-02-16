@@ -58,6 +58,7 @@ bool Can::bReceiveFrame()
     most_recent_can_frame_.setupFrame(frame);
     if (frame.can_id & CAN_ERR_FLAG)
     {
+      // TODO(all): Add some method of logging CAN error via ROS_LOG
       std::cerr << "[CAN] Error frame received with id: 0x" << std::hex << frame.can_id << std::endl;
     }
     else
