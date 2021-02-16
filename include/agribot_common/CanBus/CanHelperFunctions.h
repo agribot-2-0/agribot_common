@@ -11,14 +11,14 @@ namespace CanHelperFunctions
 {
 constexpr std::uint32_t pgn_and_sa_mask = 0xFFFFFF;
 
-inline std::uint32_t getNodePgnAndSa(std::uint32_t extendedId)
+inline std::uint32_t getJ1939PgnAndSa(std::uint32_t extendedId)
 {
-  return static_cast<std::uint32_t>(extendedId & pgn_and_sa_mask);
+  return extendedId & pgn_and_sa_mask;
 }
 
 inline std::int8_t getI8(std::uint8_t start_byte, const std::vector<std::uint8_t>& data)
 {
-  return data[start_byte];
+  return static_cast<std::int8_t>(data[start_byte]);
 }
 
 inline std::uint8_t getU8(std::uint8_t start_byte, const std::vector<std::uint8_t>& data)
