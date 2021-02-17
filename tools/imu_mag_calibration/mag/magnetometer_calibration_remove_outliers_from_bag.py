@@ -18,7 +18,7 @@ class MagnetometerCalibrationRemoveOutliers(object):
     def load_from_bag(self, bag_path):
         try:
             with rosbag.Bag(bag_path) as inbag:
-                for topic, msg, t in inbag.read_messages():
+                for topic, msg, t in inbag.read_messages(topics=['/agribot/imu/raw/mag']):
                     if topic == '/agribot/imu/raw/mag':
                         d = {'topic': topic, 't': t, 'msg': msg}
                         self.magnetic_field_msgs.append(d)
