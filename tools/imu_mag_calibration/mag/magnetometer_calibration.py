@@ -50,23 +50,23 @@ class MagnetometerCalibration(object):
                 '\n\n[IMPORTANT!!!] Previous parameters loaded. Calculating new parameters with respect to the previous ones\n\n'
             )
             min_dict['x'] /= self.previous_scale['x']
-            min_dict['x'] += self.previous_offset['x']
+            min_dict['x'] -= self.previous_offset['x']
             min_dict['y'] /= self.previous_scale['y']
-            min_dict['y'] += self.previous_offset['y']
+            min_dict['y'] -= self.previous_offset['y']
             min_dict['z'] /= self.previous_scale['z']
-            min_dict['z'] += self.previous_offset['z']
+            min_dict['z'] -= self.previous_offset['z']
 
             max_dict['x'] /= self.previous_scale['x']
-            max_dict['x'] += self.previous_offset['x']
+            max_dict['x'] -= self.previous_offset['x']
             max_dict['y'] /= self.previous_scale['y']
-            max_dict['y'] += self.previous_offset['y']
+            max_dict['y'] -= self.previous_offset['y']
             max_dict['z'] /= self.previous_scale['z']
-            max_dict['z'] += self.previous_offset['z']
+            max_dict['z'] -= self.previous_offset['z']
 
         # Hard iron distortion filtration
-        self.offset['x'] = (max_dict['x'] + min_dict['x']) / 2
-        self.offset['y'] = (max_dict['y'] + min_dict['y']) / 2
-        self.offset['z'] = (max_dict['z'] + min_dict['z']) / 2
+        self.offset['x'] = -(max_dict['x'] + min_dict['x']) / 2
+        self.offset['y'] = -(max_dict['y'] + min_dict['y']) / 2
+        self.offset['z'] = -(max_dict['z'] + min_dict['z']) / 2
 
         delta_x = (max_dict['x'] - min_dict['x']) / 2
         delta_y = (max_dict['y'] - min_dict['y']) / 2
@@ -122,9 +122,9 @@ class MagnetometerCalibration(object):
         corrected_value = value
         if self.previous_offset is not None and self.previous_scale is not None:
             corrected_value /= self.previous_scale[axis]
-            corrected_value += self.previous_offset[axis]
+            corrected_value -= self.previous_offset[axis]
 
-        corrected_value -= self.offset[axis]
+        corrected_value += self.offset[axis]
         corrected_value *= self.scale[axis]
 
         return corrected_value
