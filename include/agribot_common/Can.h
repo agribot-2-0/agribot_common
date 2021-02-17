@@ -29,13 +29,15 @@ class Can : public ICan
 private:
   int _iFileDesc;
   CanFrame most_recent_can_frame_;
+
 public:
   Can();
   // return: if 0 - config success, below 0 - config failed
-  int iInitialize(const char* pchCanChannel) override;
+  [[deprecated]] int iInitialize(const char* pchCanChannel) override;  // TODO(mwiadoms): implementacja metody
+                                                                       // initialize(std::string_view)
   // true - frame received, false - no new frames
   bool bReceiveFrame() override;
-  bool bReceiveFrame(can_frame* frame) override;
+  [[deprecated]] bool bReceiveFrame(can_frame* frame) override;
   // example can frame to send:
   // frame.can_id  = 0x123;
   // frame.can_dlc = 8;
