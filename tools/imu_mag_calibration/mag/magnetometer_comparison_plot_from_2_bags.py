@@ -22,7 +22,7 @@ class MagnetometerComparisonPlot(object):
         z_list = []
 
         with rosbag.Bag(bag_path) as inbag:
-            for topic, msg, t in inbag.read_messages():
+            for topic, msg, t in inbag.read_messages(topics=[self.magnetometer_topic]):
                 if topic == self.magnetometer_topic:
                     x_list.append(msg.magnetic_field.x)
                     y_list.append(msg.magnetic_field.y)

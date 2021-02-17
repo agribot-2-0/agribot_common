@@ -15,11 +15,12 @@ class MagnetometerCalibrationRemoveOutliers(object):
         self.magnetic_field_msgs = []
         self.processed_magnetic_field_msgs = []
 
-    def load_from_bag(self, bag_path):
+    def load_from_bag(self, bag_path, magnetometer_topic):
         try:
             with rosbag.Bag(bag_path) as inbag:
-                for topic, msg, t in inbag.read_messages(topics=['/agribot/imu/raw/mag']):
-                    if topic == '/agribot/imu/raw/mag':
+                for topic, msg, t in inbag.read_messages(
+                        topics=[magnetometer_topic]):
+                    if topic == magnetometer_topic:
                         d = {'topic': topic, 't': t, 'msg': msg}
                         self.magnetic_field_msgs.append(d)
         except IOError as e:
@@ -120,19 +121,25 @@ if __name__ == '__main__':
                         required=False,
                         default=10,
                         help='Mininaml number of neighbors in radius')
+    parser.add_argument('-t',
+                        metavar='MAGNETOMETER_TOPIC',
+                        required=False,
+                        default='/agribot/imu/raw/mag',
+                        help='Magnetometer topic')
     args = parser.parse_args()
 
     inbag_path = args.i
     outbag_path = args.o
     radius = float(args.r)
     min_neighbors_number = int(args.n)
+    topic = args.t
 
     print(
         'Performing outliers removal with radius = {} and min_neighbors_number = {}'
         .format(radius, min_neighbors_number))
 
     mcro = MagnetometerCalibrationRemoveOutliers()
-    mcro.load_from_bag(inbag_path)
+    mcro.load_from_bag(inbag_path, topic)
     mcro.remove_outliers(radius, min_neighbors_number)
     mcro.save_to_bag(outbag_path)
     mcro.plot_results()

@@ -17,7 +17,7 @@ class ImuCalibrationFromBag(ImuCalibration):
         self.logger('[ImuCalibration] Data collection from bag started...')
 
         with rosbag.Bag(bag_path) as inbag:
-            for topic, msg, t in inbag.read_messages():
+            for topic, msg, t in inbag.read_messages(topics=[imu_topic]):
                 if topic == imu_topic:
                     self.x_gyro_list.append(msg.angular_velocity.x)
                     self.y_gyro_list.append(msg.angular_velocity.y)
