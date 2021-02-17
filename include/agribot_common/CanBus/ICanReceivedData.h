@@ -20,6 +20,6 @@ class ICanReceivedData
   virtual ~ICanReceivedData(){}
   virtual void assembleValueFromFrame(const CanFrame& can_frame) = 0;
   virtual std::optional<T> getAssembledValue() const = 0;
-  virtual void resetParsedFlag() = 0;
+  virtual void resetParsedValue() = 0;
 };
 }  // namespace hal_tool
