@@ -5,13 +5,10 @@
 #pragma once
 
 #include <ros/ros.h>
-#include <memory>
-#include <optional>
 #include <string>
 
 namespace ros_common_functions
 {
-
 template <class T>
 inline T getRosParam(const std::string& parameter_name)
 {
