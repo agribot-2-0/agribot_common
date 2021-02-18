@@ -3,10 +3,10 @@ Both scripts (online and offline) save calibration parameters to YAML files:
 - imu_bias_from_bag.yaml (offline calibration)
 - imu_bias_online.yaml (online calibration)
 
-### Base class for online and offline calibration: `imu/imu_calibration.py`
+Base class for online and offline calibration: `imu/imu_calibration.py`
 
 
-### `imu/imu_calibration_online.py`
+### **imu/imu_calibration_online.py**
 
 - Optional arguments
 
@@ -14,7 +14,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
   |------|-----------|-----------------------|
   | `-t` | IMU topic | /agribot/imu/raw/data |
 
-### **Script for offline calibration from bag: `imu/imu_calibration_from_bag.py`**
+### **imu/imu_calibration_from_bag.py**
 
 - Required arguments
 
@@ -35,10 +35,10 @@ Both scripts (online and offline) save calibration parameters to YAML files:
 - mag_bias_from_bag.yaml (offline calibration)
 - mag_bias_online.yaml (online calibration)
 
-### Base class for online and offline calibration: `mag/magnetometer_calibration.py`
+Base class for online and offline calibration: `mag/magnetometer_calibration.py`
 
 
-### **Node for online calibration: `mag/magnetometer_calibration_online.py`**
+### **mag/magnetometer_calibration_online.py**
 
 - Optional arguments
 
@@ -48,7 +48,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
   | `-m`  | Magnetometer magnitude                                                                  | 4.9714e-5 (magnitude for Wrocław) |
   | `-pp` | Path to YAML file with previous parameters (if data was collected with non-zero params) | -                                 |
 
-### **Script for offline calibration from bag: `mag/magnetometer_calibration_from_bag.py`**
+### **mag/magnetometer_calibration_from_bag.py**
 
 - Required arguments
 
@@ -64,7 +64,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
   | `-m`  | Magnetometer magnitude                                                                  | 4.9714e-5 (magnitude for Wrocław) |
   | `-pp` | Path to YAML file with previous parameters (if data was collected with non-zero params) | -                                 |
 
-### **Script for offline Z calibration from bag: `mag/magnetometer_z_calibration_from_bag.py`**
+### mag/magnetometer_z_calibration_from_bag.py
 
 - Required arguments
 
@@ -83,7 +83,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
 
 # Auxiliary magnetometer scripts
 
-### Script to remove magnetometer outliers points from bag: `mag/magnetometer_calibration_remove_outliers_from_bag.py`
+### Script to remove magnetometer outliers points from bag: mag/magnetometer_calibration_remove_outliers_from_bag.py
 
 - Required arguments
 
@@ -100,7 +100,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
   | `-r` | Radius used in neighbors count                                           | 1.0e-6               |
   | `-n` | Minimal number of neighbors in radius required to qualify as valid point | 10                   |
 
-### Script to plot magnetometer XYZ data from bag: `mag/magnetometer_plot_from_bag.py`
+### Script to plot magnetometer XYZ data from bag: mag/magnetometer_plot_from_bag.py
 
 - Required arguments
 
@@ -114,7 +114,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
   |------|--------------------|----------------------|
   | `-t` | Magnetometer topic | /agribot/imu/raw/mag |
 
-### Script to plot magnetometer XYZ data from 2 bags: `mag/magnetometer_comparison_plot_from_2_bags.py`
+### Script to plot magnetometer XYZ data from 2 bags: mag/magnetometer_comparison_plot_from_2_bags.py
 
 - Required arguments
 
@@ -133,7 +133,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
 
 # Postprocessing scripts
 
-### Script to rewrite bag with stationary values for IMU and/or magnetometer: `postprocessing/rewrite_imu_and_mag_stationary_from_bag.py`
+### Script to rewrite bag with stationary values for IMU and/or magnetometer: postprocessing/rewrite_imu_and_mag_stationary_from_bag.py
 Script useful to test Madgwick/Kalman filter simulating noiseless behavior of one (or both) of the sensors:
 - if `-rewrite_imu` is set to true, sensor_msgs/Imu is rewritten with:
   - 0.0 for all angular velocities
