@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     min_z = min(z_list)
     max_z = max(z_list)
-    offset = (max_z + min_z) / 2.0
+    offset = -(max_z + min_z) / 2.0
     scale = (2.0 * magnitude_z) / (max_z - min_z)
 
     print('Offset: {}'.format(offset))
