@@ -50,7 +50,7 @@ if __name__ == '__main__':
                             metavar='MAGNETOMETER_MAGNITUDE',
                             required=False,
                             default=4.9714e-5,
-                            help='Magnetometer topic')
+                            help='Magnetometer magnitude')
         parser.add_argument(
             '-pp',
             metavar='PREVIOUS_PARAMETERS',
