@@ -50,6 +50,25 @@ int Can::iInitialize(const char* pchCanChannel)
   return SocketInitCode::SUCCESS;
 }
 
+bool Can::bReceiveFrame()
+{
+  can_frame frame;
+  if (read(_iFileDesc, &frame, sizeof(frame)) > 0)
+  {
+    most_recent_can_frame_.setupFrame(frame);
+    if (frame.can_id & CAN_ERR_FLAG)
+    {
+      // TODO(all): Add some method of logging CAN error via ROS_LOG
+      std::cerr << "[CAN] Error frame received with id: 0x" << std::hex << frame.can_id << std::endl;
+    }
+    else
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool Can::bReceiveFrame(can_frame* frame)
 {
   if (read(_iFileDesc, frame, sizeof((*frame))) > 0)

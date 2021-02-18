@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <agribot_common/CanBus/ICan.h>
 #include <agribot_common/SocketInitCode.h>
 #include <agribot_common/CanFrame.h>
 
@@ -23,24 +24,26 @@
 #include <iostream>
 #include <sstream>
 
-class Can
+class Can : public ICan
 {
 private:
   int _iFileDesc;
   CanFrame most_recent_can_frame_;
+
 public:
   Can();
   // return: if 0 - config success, below 0 - config failed
-  int iInitialize(const char* pchCanChannel);
-
+  [[deprecated]] int iInitialize(const char* pchCanChannel) override;  // TODO(mwiadoms): implement method
+                                                                       // initialize(std::string_view)
   // true - frame received, false - no new frames
-  bool bReceiveFrame(can_frame* frame);
+  bool bReceiveFrame() override;
+  [[deprecated]] bool bReceiveFrame(can_frame* frame) override;
   // example can frame to send:
   // frame.can_id  = 0x123;
   // frame.can_dlc = 8;
   // frame.data[0] = 0x1;
   // ...
   // frame.data[7] = 0x8;
-  int iSendFrame(can_frame* frame, bool extended_id = true);
-  CanFrame getMostRecentCanFrame() const;
+  int iSendFrame(can_frame* frame, bool extended_id = true) override;
+  CanFrame getMostRecentCanFrame() const override;
 };

@@ -20,7 +20,7 @@ std::vector<uint8_t> CanFrame::getData() const
   return data_;
 }
 
-uint16_t CanFrame::getId() const
+uint32_t CanFrame::getId() const
 {
   return can_id_;
 }
