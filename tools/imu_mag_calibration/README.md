@@ -6,7 +6,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
 ### Base class for online and offline calibration: `imu/imu_calibration.py`
 
 
-### **Node for online calibration: `imu/imu_calibration_online.py`**
+### `imu/imu_calibration_online.py`
 
 - Optional arguments
 
