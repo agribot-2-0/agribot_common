@@ -1,4 +1,4 @@
-## IMU (accelerometer + gyroscope) calibration scripts
+# IMU (accelerometer + gyroscope) calibration scripts
 Both scripts (online and offline) save calibration parameters to YAML files:
 - imu_bias_from_bag.yaml (offline calibration)
 - imu_bias_online.yaml (online calibration)
@@ -30,7 +30,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
 
 ---
 
-## Magnetometer calibration scripts
+# Magnetometer calibration scripts
 Both scripts (online and offline) save calibration parameters to YAML files:
 - mag_bias_from_bag.yaml (offline calibration)
 - mag_bias_online.yaml (online calibration)
@@ -79,8 +79,9 @@ Both scripts (online and offline) save calibration parameters to YAML files:
   | `-t` | Magnetometer topic               | /agribot/imu/raw/mag                     |
   | `-m` | Magnetometer magnitude in Z axis | 4.5804e-5 (Z axis magnitude for Wrocław) |
 
+---
 
-## Auxiliary magnetometer scripts
+# Auxiliary magnetometer scripts
 
 ### Script to remove magnetometer outliers points from bag: `mag/magnetometer_calibration_remove_outliers_from_bag.py`
 
@@ -128,8 +129,10 @@ Both scripts (online and offline) save calibration parameters to YAML files:
   |------|--------------------|----------------------|
   | `-t` | Magnetometer topic | /agribot/imu/raw/mag |
 
+---
 
-## Postprocessing scripts
+# Postprocessing scripts
+
 ### Script to rewrite bag with stationary values for IMU and/or magnetometer: `postprocessing/rewrite_imu_and_mag_stationary_from_bag.py`
 Script useful to test Madgwick/Kalman filter simulating noiseless behavior of one (or both) of the sensors:
 - if `-rewrite_imu` is set to true, sensor_msgs/Imu is rewritten with:
