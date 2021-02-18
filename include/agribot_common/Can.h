@@ -33,7 +33,7 @@ private:
 public:
   Can();
   // return: if 0 - config success, below 0 - config failed
-  [[deprecated]] int iInitialize(const char* pchCanChannel) override;  // TODO(mwiadoms): implementacja metody
+  [[deprecated]] int iInitialize(const char* pchCanChannel) override;  // TODO(mwiadoms): implement method
                                                                        // initialize(std::string_view)
   // true - frame received, false - no new frames
   bool bReceiveFrame() override;
