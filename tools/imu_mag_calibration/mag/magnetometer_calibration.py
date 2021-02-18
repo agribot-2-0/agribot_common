@@ -46,28 +46,41 @@ class MagnetometerCalibration(object):
         }
 
         if self.previous_offset is not None and self.previous_scale is not None:
-            self.logger(
-                '\n\n[IMPORTANT!!!] Previous parameters loaded. Calculating new parameters with respect to the previous ones\n\n'
-            )
-            min_dict['x'] /= self.previous_scale['x']
-            min_dict['x'] -= self.previous_offset['x']
-            min_dict['y'] /= self.previous_scale['y']
-            min_dict['y'] -= self.previous_offset['y']
-            min_dict['z'] /= self.previous_scale['z']
-            min_dict['z'] -= self.previous_offset['z']
-
-            max_dict['x'] /= self.previous_scale['x']
-            max_dict['x'] -= self.previous_offset['x']
-            max_dict['y'] /= self.previous_scale['y']
-            max_dict['y'] -= self.previous_offset['y']
-            max_dict['z'] /= self.previous_scale['z']
-            max_dict['z'] -= self.previous_offset['z']
+            min_dict, max_dict = self.include_previous_parameters(
+                min_dict, max_dict)
 
         # Hard iron distortion filtration
+        self.compute_hard_iron_parameters(min_dict, max_dict)
+
+        # Soft iron distortion filtration
+        self.compute_soft_iron_parameters(min_dict, max_dict)
+
+    def include_previous_parameters(self, min_dict, max_dict):
+        self.logger(
+            '\n\n[IMPORTANT!!!] Previous parameters loaded. Calculating new parameters with respect to the previous ones\n\n'
+        )
+        min_dict['x'] /= self.previous_scale['x']
+        min_dict['x'] -= self.previous_offset['x']
+        min_dict['y'] /= self.previous_scale['y']
+        min_dict['y'] -= self.previous_offset['y']
+        min_dict['z'] /= self.previous_scale['z']
+        min_dict['z'] -= self.previous_offset['z']
+
+        max_dict['x'] /= self.previous_scale['x']
+        max_dict['x'] -= self.previous_offset['x']
+        max_dict['y'] /= self.previous_scale['y']
+        max_dict['y'] -= self.previous_offset['y']
+        max_dict['z'] /= self.previous_scale['z']
+        max_dict['z'] -= self.previous_offset['z']
+
+        return min_dict, max_dict
+
+    def compute_hard_iron_parameters(self, min_dict, max_dict):
         self.offset['x'] = -(max_dict['x'] + min_dict['x']) / 2
         self.offset['y'] = -(max_dict['y'] + min_dict['y']) / 2
         self.offset['z'] = -(max_dict['z'] + min_dict['z']) / 2
 
+    def compute_soft_iron_parameters(self, min_dict, max_dict):
         delta_x = (max_dict['x'] - min_dict['x']) / 2
         delta_y = (max_dict['y'] - min_dict['y']) / 2
         delta_z = (max_dict['z'] - min_dict['z']) / 2
@@ -140,12 +153,9 @@ class MagnetometerCalibration(object):
         ax1.grid()
 
         ax2 = fig1.add_subplot(2, 1, 2)
-        ax2.plot(self.corrected_x_list,
-                 self.corrected_y_list, 'r.')
-        ax2.plot(self.corrected_x_list,
-                 self.corrected_z_list, 'b.')
-        ax2.plot(self.corrected_y_list,
-                 self.corrected_z_list, 'c.')
+        ax2.plot(self.corrected_x_list, self.corrected_y_list, 'r.')
+        ax2.plot(self.corrected_x_list, self.corrected_z_list, 'b.')
+        ax2.plot(self.corrected_y_list, self.corrected_z_list, 'c.')
         ax2.set(xlabel='',
                 ylabel='',
                 title='After soft and hard iron distortion filtration.')
