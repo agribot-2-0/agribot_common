@@ -13,7 +13,7 @@ template <class T>
 inline T getRosParam(const std::string& parameter_name)
 {
   std::string key;
-  if (!ros::param::search(parameter_name, key))
+  if (!ros::param::has(parameter_name, key))
   {
     throw parameter_name + " param not set.";
   }
