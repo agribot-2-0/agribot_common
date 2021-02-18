@@ -6,7 +6,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
 Base class for online and offline calibration: `imu/imu_calibration.py`
 
 
-### **imu/imu_calibration_online.py**
+### **Node for online IMU calibration: imu/imu_calibration_online.py**
 
 - Optional arguments
 
@@ -14,7 +14,7 @@ Base class for online and offline calibration: `imu/imu_calibration.py`
   |------|-----------|-----------------------|
   | `-t` | IMU topic | /agribot/imu/raw/data |
 
-### **imu/imu_calibration_from_bag.py**
+### **Script for offline IMU calibration: imu/imu_calibration_from_bag.py**
 
 - Required arguments
 
@@ -38,7 +38,7 @@ Both scripts (online and offline) save calibration parameters to YAML files:
 Base class for online and offline calibration: `mag/magnetometer_calibration.py`
 
 
-### **mag/magnetometer_calibration_online.py**
+### **Node for online magnetometer calibration: mag/magnetometer_calibration_online.py**
 
 - Optional arguments
 
@@ -48,7 +48,7 @@ Base class for online and offline calibration: `mag/magnetometer_calibration.py`
   | `-m`  | Magnetometer magnitude                                                                  | 4.9714e-5 (magnitude for Wrocław) |
   | `-pp` | Path to YAML file with previous parameters (if data was collected with non-zero params) | -                                 |
 
-### **mag/magnetometer_calibration_from_bag.py**
+### **Script for offline magnetometer calibration: mag/magnetometer_calibration_from_bag.py**
 
 - Required arguments
 
