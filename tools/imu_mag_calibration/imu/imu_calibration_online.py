@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 
+import argparse
 import rospy
 from sensor_msgs.msg import Imu
 
@@ -38,20 +39,28 @@ class ImuCalibrationOnline(ImuCalibration):
 
 if __name__ == '__main__':
     try:
-        # Provide imu topic
-        imu_topic = '/agribot/imu/raw/data'
+        parser = argparse.ArgumentParser(description='IMU calibration online')
+
+        parser.add_argument('-t',
+                            metavar='IMU_TOPIC',
+                            required=False,
+                            default='/agribot/imu/raw/data',
+                            help='IMU topic')
+        args = parser.parse_args()
+
+        topic = args.t
 
         # Initialize
         rospy.init_node('imu_calibration')
-        ic = ImuCalibrationOnline()
+        ico = ImuCalibrationOnline()
 
         # Collect data and compute parameters
-        ic.collect_data(imu_topic)
-        ic.compute_offsets()
+        ico.collect_data(topic)
+        ico.compute_offsets()
 
         # Show and save parameters
-        ic.print_offsets()
-        ic.save_offsets_to_yaml('./imu_bias_online.yaml')
+        ico.print_offsets()
+        ico.save_offsets_to_yaml('./imu_bias_online.yaml')
 
     except rospy.ROSInterruptException:
         pass
