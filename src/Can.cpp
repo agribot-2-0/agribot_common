@@ -15,7 +15,7 @@ int Can::iInitialize(const char* pchCanChannel)
   int iRet = 0;
   // Capture all errors described in:
   // https://github.com/linux-can/can-utils/blob/master/include/linux/can/error.h
-  can_err_mask_t ErrMask = 0x1ff;
+  can_err_mask_t ErrMask = 0x1ff & ~(CAN_ERR_LOSTARB);
   struct ifreq _ifr;
 
   _iFileDesc = socket(PF_CAN, SOCK_RAW, CAN_RAW);
