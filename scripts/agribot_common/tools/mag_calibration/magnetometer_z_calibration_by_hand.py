@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+from __future__ import print_function
+
 # Fill these values
 MIN_Z = -0.000143
 MAX_Z = -2.85E-5

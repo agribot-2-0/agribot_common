@@ -10,6 +10,8 @@
 # (time when the message was received by bag recorder)
 # and time in the message timestamp (stamped by publisher)
 
+from __future__ import print_function
+
 from math import degrees
 
 import rosbag

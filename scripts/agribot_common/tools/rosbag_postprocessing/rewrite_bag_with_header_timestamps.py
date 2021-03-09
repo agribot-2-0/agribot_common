@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Based on: http://wiki.ros.org/rosbag/Cookbook
+from __future__ import print_function
 
 import argparse
 import rosbag
