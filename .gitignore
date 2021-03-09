@@ -2,4 +2,6 @@ key/*
 tools/live_view/.ipynb_checkpoints/*
 tools/live_view/_map.html
 tools/live_view/data/*
+tools/imu_mag_calibration/**/*.yaml
+tools/imu_mag_calibration/**/*.bag
 *.pyc
