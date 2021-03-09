@@ -6,13 +6,18 @@ from geometry_msgs.msg import PoseStamped
 
 
 class Callbacker:
-
     def __init__(self):
-        self.imu_1_sub = rospy.Subscriber("agribot/imu/filtered", Imu, self.imu_1_callback)
-        self.imu_2_sub = rospy.Subscriber("agribot/imu/raw", Imu, self.imu_2_callback)
+        self.imu_1_sub = rospy.Subscriber("agribot/imu/filtered", Imu,
+                                          self.imu_1_callback)
+        self.imu_2_sub = rospy.Subscriber("agribot/imu/raw", Imu,
+                                          self.imu_2_callback)
 
-        self.pose_1_pub = rospy.Publisher("pose_1_pub", PoseStamped, queue_size=1)
-        self.pose_2_pub = rospy.Publisher("pose_2_pub", PoseStamped, queue_size=1)
+        self.pose_1_pub = rospy.Publisher("pose_1_pub",
+                                          PoseStamped,
+                                          queue_size=1)
+        self.pose_2_pub = rospy.Publisher("pose_2_pub",
+                                          PoseStamped,
+                                          queue_size=1)
 
     def imu_1_callback(self, msg):
         pose = PoseStamped()

@@ -22,7 +22,8 @@ class MagnetometerComparisonPlot(object):
         z_list = []
 
         with rosbag.Bag(bag_path) as inbag:
-            for topic, msg, t in inbag.read_messages(topics=[self.magnetometer_topic]):
+            for topic, msg, t in inbag.read_messages(
+                    topics=[self.magnetometer_topic]):
                 if topic == self.magnetometer_topic:
                     x_list.append(msg.magnetic_field.x)
                     y_list.append(msg.magnetic_field.y)
@@ -35,8 +36,16 @@ class MagnetometerComparisonPlot(object):
         fig = plt.figure()
 
         ax = fig.add_subplot(1, 1, 1, projection='3d')
-        ax.plot(self.x_list_1, self.y_list_1, self.z_list_1, 'r.', label='Bag 1')
-        ax.plot(self.x_list_2, self.y_list_2, self.z_list_2, 'b.', label='Bag 2')
+        ax.plot(self.x_list_1,
+                self.y_list_1,
+                self.z_list_1,
+                'r.',
+                label='Bag 1')
+        ax.plot(self.x_list_2,
+                self.y_list_2,
+                self.z_list_2,
+                'b.',
+                label='Bag 2')
         ax.set(xlabel='x', ylabel='y', title='3D magnetometer plot')
         ax.legend()
         ax.grid()

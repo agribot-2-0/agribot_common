@@ -3,8 +3,9 @@
 import rosbag
 import sys
 import argparse
-from distutils.util import strtobool 
+from distutils.util import strtobool
 from statistics import mean
+
 
 class ImuMagRewriter(object):
 
@@ -16,11 +17,11 @@ class ImuMagRewriter(object):
         self.imu_topic = imu_topic
         self.mag_topic = mag_topic
 
-
     def rewrite(self, inbag_path, outbag_path):
         # Calculate mean magnetic field vector if necessary
         if self.rewrite_mag:
-            mean_mag_field = self.calculate_mean_magnetic_field_from_bag(inbag_path)
+            mean_mag_field = self.calculate_mean_magnetic_field_from_bag(
+                inbag_path)
 
         try:
             with rosbag.Bag(inbag_path) as inbag:
@@ -33,7 +34,7 @@ class ImuMagRewriter(object):
                             msg.linear_acceleration.x = 0.0
                             msg.linear_acceleration.y = 0.0
                             msg.linear_acceleration.z = self.GRAVITY_OFFSET_Z
-                        elif topic == self.mag_topic and self.rewrite_mag:                          
+                        elif topic == self.mag_topic and self.rewrite_mag:
                             msg.magnetic_field.x = mean_mag_field['x']
                             msg.magnetic_field.y = mean_mag_field['y']
                             msg.magnetic_field.z = mean_mag_field['z']
@@ -64,6 +65,7 @@ class ImuMagRewriter(object):
         mean_mag_field['z'] = mean(mag_field_list_z)
 
         return mean_mag_field
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(

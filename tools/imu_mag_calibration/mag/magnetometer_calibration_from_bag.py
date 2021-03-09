@@ -19,7 +19,8 @@ class MagnetometerCalibrationFromBag(MagnetometerCalibration):
             '[MagnetometerCalibration] Data collection from bag started...')
 
         with rosbag.Bag(bag_path) as inbag:
-            for topic, msg, t in inbag.read_messages(topics=[magnetometer_topic]):
+            for topic, msg, t in inbag.read_messages(
+                    topics=[magnetometer_topic]):
                 if topic == magnetometer_topic:
                     self.x_list.append(msg.magnetic_field.x)
                     self.y_list.append(msg.magnetic_field.y)
