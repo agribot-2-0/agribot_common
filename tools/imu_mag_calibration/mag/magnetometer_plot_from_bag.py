@@ -35,9 +35,16 @@ if __name__ == '__main__':
                 y_list.append(msg.magnetic_field.y)
                 z_list.append(msg.magnetic_field.z)
 
-    fig = plt.figure()
-    ax1 = fig.add_subplot(1, 1, 1, projection='3d')
+    fig1 = plt.figure()
+    ax1 = fig1.add_subplot(1, 1, 1, projection='3d')
     ax1.plot(x_list, y_list, z_list, 'r.')
-    ax1.set(xlabel='x', ylabel='z', zlabel='z', title='Magnetometer 3D plot')
+    ax1.set(xlabel='x', ylabel='y', zlabel='z', title='Magnetometer 3D plot')
     ax1.grid()
+
+    fig2 = plt.figure()
+    ax2 = fig2.add_subplot(1, 1, 1)
+    ax2.plot(x_list, y_list, 'r.')
+    ax2.set(xlabel='x', ylabel='y', title='Magnetometer X-Y plot')
+    ax2.grid()
+
     plt.show()
