@@ -18,7 +18,7 @@ pipelines:
         script:
           - apk add --update bash coreutils tar python py-pip
           - pip install pylint==1.9.5
-          - pylint --rcfile=agribot_common/pylint_conf/.pylintrc scripts/*
+          - pylint --rcfile=pylint_conf/.pylintrc scripts/*
     - step:
         name: "ROS Build"
         services:
