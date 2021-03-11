@@ -1,5 +1,9 @@
 key/*
-tools/live_view/.ipynb_checkpoints/*
-tools/live_view/_map.html
-tools/live_view/data/*
+scripts/agribot_common/tools/live_view/.ipynb_checkpoints/*
+scripts/agribot_common/tools/live_view/_map.html
+scripts/agribot_common/tools/live_view/data/*
+scripts/agribot_common/tools/imu_calibration/*.yaml
+scripts/agribot_common/tools/imu_calibration/*.bag
+scripts/agribot_common/tools/mag_calibration/*.yaml
+scripts/agribot_common/tools/mag_calibration/*.bag
 *.pyc

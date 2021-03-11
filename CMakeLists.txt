@@ -34,10 +34,6 @@ install(DIRECTORY include/${PROJECT_NAME}/
 )
 
 install(PROGRAMS
-  tools/rosbag_postprocessing/check_tf_stamp_ascending.py
-  tools/rosbag_postprocessing/check_tf_stamp_diff.py
-  tools/rosbag_postprocessing/rewrite_bag_with_header_timestamps.py
-  tools/rosbag_live/check_tf_stamp_ascending_live.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
