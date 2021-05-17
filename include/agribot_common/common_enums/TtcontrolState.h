@@ -4,7 +4,7 @@
 
 #pragma once
 
-namespace behavior_tree
+namespace agribot_behavior
 {
 enum class TtcontrolState
 {
