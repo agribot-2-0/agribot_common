@@ -9,7 +9,7 @@
 
 namespace common_functions
 {
-std::string_view navigationManagerResultToString(agribot_msgs::AgribotNavigationManagerResult result)
+std::string_view navigationManagerResultToString(const agribot_msgs::AgribotNavigationManagerResult& result)
 {
   switch (result.result)
   {
