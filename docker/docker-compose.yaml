@@ -1,11 +1,12 @@
-version: '2.0'
+version: '3.0'
 services:
-  mapproxy:
-    image: danielsnider/mapproxy
+  tilecloud:
+    build: .
     ports:
     - "8082:8080"
     volumes:
-    - ~/mapproxy:/mapproxy
+    - ~/agribot/maps:/maps
+    command: ["/app/tc-viewer", "--host=0.0.0.0", "file:///maps/%(z)s/%(x)s/%(y)s.png"]
   nginx-rtmp:
     image: tiangolo/nginx-rtmp
     ports:
