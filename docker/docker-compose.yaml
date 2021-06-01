@@ -1,11 +1,13 @@
-version: '2.0'
+version: '3.0'
 services:
-  mapproxy:
-    image: danielsnider/mapproxy
+  tilecloud:
+    build: ./dockerfile/tilecloud
     ports:
     - "8082:8080"
-    volumes:
-    - ~/mapproxy:/mapproxy
+    environment:
+    - AWS_ACCESS_KEY_ID=AGRIBOT_CONFIGURE_LOCALLY
+    - AWS_SECRET_ACCESS_KEY=AGRIBOT_CONFIGURE_LOCALLY
+    command: ["/app/tc-viewer", "--host=0.0.0.0", "s3://agribot-maps/all/%(z)s/%(x)s/%(y)s.png"]
   nginx-rtmp:
     image: tiangolo/nginx-rtmp
     ports:
