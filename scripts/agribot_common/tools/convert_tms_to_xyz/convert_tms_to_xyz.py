@@ -31,7 +31,7 @@ def convert_tms(main_directory):
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
+        convert_tms(sys.argv[1])
+    else:
         print("Enter the path of the folder containing.")
         print("Example: ( $ ./tms-to-xyz.py /home/agribot/agribot_maps )")
-    else:
-        convert_tms(sys.argv[1])
