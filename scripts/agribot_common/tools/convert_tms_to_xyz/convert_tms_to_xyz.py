@@ -5,7 +5,7 @@ import os
 import glob
 
 
-def ConvertTms(main_directory):
+def convert_tms(main_directory):
     for z in os.listdir(main_directory):
         z_direcotry = os.path.join(main_directory, z)
         if os.path.isdir(z_direcotry):
@@ -30,8 +30,8 @@ def ConvertTms(main_directory):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    if len(sys.argv) == 2:
         print("Enter the path of the folder containing.")
         print("Example: ( $ ./tms-to-xyz.py /home/agribot/agribot_maps )")
     else:
-        ConvertTms(sys.argv[1])
+        convert_tms(sys.argv[1])
