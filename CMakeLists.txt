@@ -8,7 +8,7 @@ catkin_python_setup()
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME} agribot_common
+  LIBRARIES ${PROJECT_NAME} agribot_common agribot_connection
 )
 
 ###########
@@ -17,7 +17,6 @@ catkin_package(
 include_directories(include/)
 add_library(agribot_common src/Can.cpp src/CanFrame.cpp)
 
-include_directories(include/agribot_common/connection)
 add_library(agribot_connection
   src/connection/Buffer.cpp
   src/connection/IFrame.cpp
