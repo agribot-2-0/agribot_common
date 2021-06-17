@@ -19,14 +19,17 @@
 class IParser
 {
 private:
+  std::unordered_map<uint64_t, std::vector<std::function<void(IFrame&)>>> callback_map_;
+
+protected:
   std::unique_ptr<IParsingStrategy> parsing_strategy_;
   std::unique_ptr<IFrameFactory> frame_factory_;
-  std::unordered_map<uint64_t, std::vector<std::function<void(IFrame&)>>> callback_map_;
   void callCallbacks(uint64_t id, IFrame& frame);  // NOLINT(runtime/references)
 
 public:
+  // TODO(olek) - add constructor, which passes parsing_strategy_ and frame_factory_
   IParser() = delete;
-  ~IParser();
+  virtual ~IParser() = default;
   void registerCallback(uint64_t id, const std::function<void(IFrame&)>& callback);
   void processBuffer(Buffer& buffer);  // NOLINT(runtime/references)
   virtual bool checkCrc(std::vector<uint8_t>::iterator begin_it) = 0;

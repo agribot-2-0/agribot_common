@@ -40,8 +40,8 @@ float LsbFirstParsingStrategy::getFloat(std::vector<uint8_t>::iterator it)
 double LsbFirstParsingStrategy::getDouble(std::vector<uint8_t>::iterator it)
 {
   auto parsed_uint64 = getUint64(it);
-  float parsed_double;
-  std::memcpy(&parsed_double, &parsed_uint64, sizeof(float));
+  double parsed_double;
+  std::memcpy(&parsed_double, &parsed_uint64, sizeof(double));
 
   return parsed_double;
 }
