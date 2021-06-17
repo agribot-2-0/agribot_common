@@ -37,6 +37,9 @@ float MsbFirstParsingStrategy::getFloat(std::vector<uint8_t>::iterator it)
   return parsed_float;
 }
 
+// NOTE: memcpy should work properly on systems with Most Significant Byte First and Least Significant Byte First. It
+// assumes that float/double has the same byte order as uint32/uint64. An uint32/uint64 are parsed using
+// platform-independent binary operators and shifts
 double MsbFirstParsingStrategy::getDouble(std::vector<uint8_t>::iterator it)
 {
   auto parsed_uint64 = getUint64(it);

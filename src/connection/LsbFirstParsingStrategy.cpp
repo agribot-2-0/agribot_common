@@ -28,6 +28,9 @@ uint64_t LsbFirstParsingStrategy::getUint64(std::vector<uint8_t>::iterator it)
           static_cast<uint64_t>(*(it + 7)) << 56);
 }
 
+// NOTE: memcpy should work properly on systems with Most Significant Byte First and Least Significant Byte First. It
+// assumes that float/double has the same byte order as uint32/uint64. An uint32/uint64 are parsed using
+// platform-independent binary operators and shifts
 float LsbFirstParsingStrategy::getFloat(std::vector<uint8_t>::iterator it)
 {
   auto parsed_uint32 = getUint32(it);
