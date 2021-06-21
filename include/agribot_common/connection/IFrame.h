@@ -12,8 +12,14 @@
 class IFrame
 {
 public:
-  IFrame() = default;
-  ~IFrame() = default;
+  virtual ~IFrame() = default;
   virtual void parse(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it,
-                     IParsingStrategy& strategy);  // NOLINT(runtime/references)
+                     IParsingStrategy& strategy) = 0;  // NOLINT(runtime/references)
+
+protected:
+  IFrame() = default;
+  IFrame(const IFrame& other) = default;
+  IFrame(IFrame&& other) = default;
+  IFrame& operator=(const IFrame& other) = default;
+  IFrame& operator=(IFrame&& other) = default;
 };

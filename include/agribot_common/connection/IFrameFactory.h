@@ -6,10 +6,18 @@
 
 #include <agribot_common/connection/IFrame.h>
 
+#include <memory>
+
 class IFrameFactory
 {
 public:
+  virtual ~IFrameFactory() = default;
+  virtual std::unique_ptr<IFrame> createFrame(uint64_t id) = 0;
+
+protected:
   IFrameFactory() = default;
-  ~IFrameFactory() = default;
-  virtual IFrame createFrame(uint64_t id) = 0;
+  IFrameFactory(const IFrameFactory& other) = default;
+  IFrameFactory(IFrameFactory&& other) = default;
+  IFrameFactory& operator=(const IFrameFactory& other) = default;
+  IFrameFactory& operator=(IFrameFactory&& other) = default;
 };

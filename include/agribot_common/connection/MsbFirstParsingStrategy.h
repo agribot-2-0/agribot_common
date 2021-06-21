@@ -13,8 +13,6 @@
 class MsbFirstParsingStrategy : public IParsingStrategy
 {
 public:
-  MsbFirstParsingStrategy() = default;
-  ~MsbFirstParsingStrategy() = default;
   uint8_t getUint8(std::vector<uint8_t>::iterator it) override;
   uint16_t getUint16(std::vector<uint8_t>::iterator it) override;
   uint32_t getUint32(std::vector<uint8_t>::iterator it) override;
