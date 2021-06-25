@@ -10,14 +10,14 @@
 #include <string>
 #include <vector>
 
-class LsbFirstParsingStrategy : public IParsingStrategy
+struct LsbFirstParsingStrategy : public IParsingStrategy
 {
-public:
-  uint8_t getUint8(std::vector<uint8_t>::iterator it) override;
-  uint16_t getUint16(std::vector<uint8_t>::iterator it) override;
-  uint32_t getUint32(std::vector<uint8_t>::iterator it) override;
-  uint64_t getUint64(std::vector<uint8_t>::iterator it) override;
-  float getFloat(std::vector<uint8_t>::iterator it) override;
-  double getDouble(std::vector<uint8_t>::iterator it) override;
-  std::string getString(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it) override;
+  uint8_t getUint8(std::vector<uint8_t>::const_iterator it) override;
+  uint16_t getUint16(std::vector<uint8_t>::const_iterator it) override;
+  uint32_t getUint32(std::vector<uint8_t>::const_iterator it) override;
+  uint64_t getUint64(std::vector<uint8_t>::const_iterator it) override;
+  float getFloat(std::vector<uint8_t>::const_iterator it) override;
+  double getDouble(std::vector<uint8_t>::const_iterator it) override;
+  std::string getString(std::vector<uint8_t>::const_iterator begin_it,
+                        std::vector<uint8_t>::const_iterator end_it) override;
 };

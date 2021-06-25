@@ -11,13 +11,12 @@
 class IFrameFactory
 {
 public:
-  virtual ~IFrameFactory() = default;
-  virtual std::unique_ptr<IFrame> createFrame(uint64_t id) = 0;
-
-protected:
   IFrameFactory() = default;
-  IFrameFactory(const IFrameFactory& other) = default;
-  IFrameFactory(IFrameFactory&& other) = default;
-  IFrameFactory& operator=(const IFrameFactory& other) = default;
-  IFrameFactory& operator=(IFrameFactory&& other) = default;
+  virtual ~IFrameFactory() = default;
+  IFrameFactory(const IFrameFactory& other) = delete;
+  IFrameFactory(IFrameFactory&& other) = delete;
+  IFrameFactory& operator=(const IFrameFactory& other) = delete;
+  IFrameFactory& operator=(IFrameFactory&& other) = delete;
+
+  virtual std::unique_ptr<IFrame> createFrame(uint64_t id) = 0;
 };

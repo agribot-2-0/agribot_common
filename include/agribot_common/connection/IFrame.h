@@ -9,17 +9,15 @@
 #include <cstdint>
 #include <vector>
 
-class IFrame
+struct IFrame
 {
-public:
+  IFrame() = default;
   virtual ~IFrame() = default;
+  IFrame(const IFrame& other) = delete;
+  IFrame(IFrame&& other) = delete;
+  IFrame& operator=(const IFrame& other) = delete;
+  IFrame& operator=(IFrame&& other) = delete;
+
   virtual void parse(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it,
                      IParsingStrategy& strategy) = 0;  // NOLINT(runtime/references)
-
-protected:
-  IFrame() = default;
-  IFrame(const IFrame& other) = default;
-  IFrame(IFrame&& other) = default;
-  IFrame& operator=(const IFrame& other) = default;
-  IFrame& operator=(IFrame&& other) = default;
 };

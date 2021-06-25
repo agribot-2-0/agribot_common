@@ -19,7 +19,6 @@ add_library(agribot_common src/Can.cpp src/CanFrame.cpp)
 
 add_library(agribot_connection
   src/connection/Buffer.cpp
-  src/connection/IParser.cpp
   src/connection/LsbFirstParsingStrategy.cpp
   src/connection/MsbFirstParsingStrategy.cpp
   src/connection/TcpSocket.cpp
