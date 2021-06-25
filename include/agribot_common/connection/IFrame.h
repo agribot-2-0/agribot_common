@@ -19,5 +19,5 @@ struct IFrame
   IFrame& operator=(IFrame&& other) = delete;
 
   virtual void parse(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it,
-                     IParsingStrategy& strategy) = 0;  // NOLINT(runtime/references)
+                     const IParsingStrategy& strategy) = 0;
 };
