@@ -29,7 +29,7 @@ public:
   IParser& operator=(IParser&& other) = delete;
 
   virtual void getFrameBuffersFromPacketBuffer(Buffer& packet_buffer) = 0;  // NOLINT(runtime/references)
-  virtual bool haveFrameBufferToParse() = 0;
+  virtual bool haveFrameBufferToParse() const = 0;
   virtual void parseFrameBuffer() = 0;
   virtual void registerCallback(uint64_t id, const Callback& callback) = 0;
 };

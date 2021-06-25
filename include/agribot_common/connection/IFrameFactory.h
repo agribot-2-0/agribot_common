@@ -18,5 +18,5 @@ public:
   IFrameFactory& operator=(const IFrameFactory& other) = delete;
   IFrameFactory& operator=(IFrameFactory&& other) = delete;
 
-  virtual std::unique_ptr<IFrame> createFrame(uint64_t id) = 0;
+  virtual std::unique_ptr<IFrame> createFrame(uint64_t id) const = 0;
 };
