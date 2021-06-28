@@ -19,6 +19,9 @@ public:
   Buffer& operator=(const Buffer& other) = default;
   Buffer& operator=(Buffer&& other) = default;
 
+  std::size_t getReadLength() const;
+  void clear();
+
   std::vector<uint8_t> buffer_;
   std::size_t read_length_;
 };

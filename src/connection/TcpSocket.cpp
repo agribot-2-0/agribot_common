@@ -52,5 +52,16 @@ void TcpSocket::reconnect()
 
 void TcpSocket::read(Buffer& buffer)
 {
-  buffer.read_length_ = recv(socket_fd_, &buffer.buffer_[0], buffer.buffer_.size(), 0);
+  ssize_t read_length;
+  read_length = recv(socket_fd_, &buffer.buffer_[0], buffer.buffer_.size(), 0);
+
+  if (read_length < 0)
+  {
+    buffer.clear();
+    throw std::runtime_error("[TcpSocket] recv error (read_length < 0)");
+  }
+  else
+  {
+    buffer.read_length_ = read_length;
+  }
 }

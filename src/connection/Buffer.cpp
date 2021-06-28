@@ -4,13 +4,23 @@
 
 #include <agribot_common/connection/Buffer.h>
 
-Buffer::Buffer(std::size_t size)
+Buffer::Buffer(std::size_t size) : read_length_(0)
 {
-  buffer_.reserve(size);
+  buffer_.resize(size);
 }
 
 Buffer::Buffer(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it)
   // : buffer_{ begin_it, end_it }, read_length_{ std::distance(begin_it, end_it) }
   : buffer_{ begin_it, end_it }, read_length_{ static_cast<std::size_t>(std::distance(begin_it, end_it)) }
 {
+}
+
+std::size_t Buffer::getReadLength() const
+{
+  return read_length_;
+}
+
+void Buffer::clear()
+{
+  read_length_ = 0;
 }
