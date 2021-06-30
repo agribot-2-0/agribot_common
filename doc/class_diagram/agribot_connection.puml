@@ -1,0 +1,100 @@
+@startuml agribot_connection
+
+namespace agribot_connection {
+
+  interface IFrame
+  {
+    + {abstract} parse(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it, const IParsingStrategy& strateg) : void
+  }
+
+  interface IFrameFactory
+  {
+    + {abstract} createFrame(uint64_t id) : std::unique_ptr<IFrame>
+  }
+
+  interface IParser
+  {
+    + {abstract} getFrameBuffersFromPacketBuffer(Buffer& packet_buffer) : void
+    + {abstract} haveFrameBufferToParse() : bool
+    + {abstract} parseFrameBuffer() : void
+    + {abstract} registerCallback(uint64_t id, const std::function<void(IFrame&)>& callback) : void
+  }
+
+  interface IParsingStrategy
+  {
+    + {abstract} getUint8(std::vector<uint8_t>::const_iterator it) : std::uint8_t
+    + {abstract} getUint16(std::vector<uint8_t>::const_iterator it) : std::uint16_t
+    + {abstract} getUint32(std::vector<uint8_t>::const_iterator it) : std::uint32_t
+    + {abstract} getUint64(std::vector<uint8_t>::const_iterator it) : std::uint64_t
+    + {abstract} getFloat(std::vector<uint8_t>::const_iterator it) : float
+    + {abstract} getDouble(std::vector<uint8_t>::const_iterator it) : double
+    + {abstract} getString(std::vector<uint8_t>::const_iterator begin_it, std::vector<uint8_t>::const_iterator end_it) : std::string
+  }
+
+  interface ISocket
+  {
+    + {abstract} open() : void
+    + {abstract} close() : void
+    + {abstract} connect() : void
+    + {abstract} reconnect() : void
+    + {abstract} read(Buffer& buffer) : void
+  }
+
+  class Buffer
+  {
+    + getReadLength() : std::size_t
+    + clear() : void
+    - std::vector<uint8_t> buffer_
+    - std::size_t read_length_
+  }
+
+  class LsbFirstParsingStrategy
+  {
+    + getUint8(std::vector<uint8_t>::const_iterator it) : std::uint8_t
+    + getUint16(std::vector<uint8_t>::const_iterator it) : std::uint16_t
+    + getUint32(std::vector<uint8_t>::const_iterator it) : std::uint32_t
+    + getUint64(std::vector<uint8_t>::const_iterator it) : std::uint64_t
+    + getFloat(std::vector<uint8_t>::const_iterator it) : float
+    + getDouble(std::vector<uint8_t>::const_iterator it) : double
+    + getString(std::vector<uint8_t>::const_iterator begin_it, std::vector<uint8_t>::const_iterator end_it) : std::string
+  }
+
+  class MsbFirstParsingStrategy
+  {
+    + getUint8(std::vector<uint8_t>::const_iterator it) : std::uint8_t
+    + getUint16(std::vector<uint8_t>::const_iterator it) : std::uint16_t
+    + getUint32(std::vector<uint8_t>::const_iterator it) : std::uint32_t
+    + getUint64(std::vector<uint8_t>::const_iterator it) : std::uint64_t
+    + getFloat(std::vector<uint8_t>::const_iterator it) : float
+    + getDouble(std::vector<uint8_t>::const_iterator it) : double
+    + getString(std::vector<uint8_t>::const_iterator begin_it, std::vector<uint8_t>::const_iterator end_it) : std::string
+  }
+
+  class TcpSocket
+  {
+    + open() : void
+    + close() : void
+    + connect() : void
+    + reconnect() : void
+    + read(Buffer& buffer) : void
+    - int socket_fd_
+    - struct sockaddr_in server_address_
+    - std::string ip_address_
+    - uint16_t port_
+    - uint16_t timeout_ms_
+  }
+
+  ' Inheritance
+  class LsbFirstParsingStrategy implements IParsingStrategy
+  class MsbFirstParsingStrategy implements IParsingStrategy
+  class TcpSocket implements ISocket
+
+  ' Dependencies
+  ISocket ..> Buffer
+  IParser ..> Buffer
+  IParser ..> IFrame
+  IFrameFactory ..> IFrame
+  IFrame ..> IParsingStrategy
+}
+
+@enduml
