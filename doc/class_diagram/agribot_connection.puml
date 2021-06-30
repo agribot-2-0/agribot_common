@@ -4,7 +4,7 @@ namespace agribot_connection {
 
   interface IFrame
   {
-    + {abstract} parse(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it, const IParsingStrategy& strateg) : void
+    + {abstract} parse(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it, const IParsingStrategy& strategy) : void
   }
 
   interface IFrameFactory
