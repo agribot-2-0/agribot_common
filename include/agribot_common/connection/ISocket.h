@@ -21,4 +21,5 @@ public:
   virtual void connect() = 0;
   virtual void reconnect() = 0;
   virtual void read(Buffer& buffer) = 0;  // NOLINT(runtime/references)
+  virtual void write(const Buffer& buffer) = 0;
 };

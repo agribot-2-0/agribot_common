@@ -7,9 +7,8 @@
 #include <cstdint>
 #include <vector>
 
-class Buffer
+struct Buffer
 {
-public:
   Buffer() = delete;
   explicit Buffer(std::size_t size);
   Buffer(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it);
@@ -19,7 +18,6 @@ public:
   Buffer& operator=(const Buffer& other) = default;
   Buffer& operator=(Buffer&& other) = default;
 
-  std::size_t getReadLength() const;
   void clear();
 
   std::vector<uint8_t> buffer_;

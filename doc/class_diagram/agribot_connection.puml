@@ -14,7 +14,7 @@ namespace agribot_connection {
 
   interface IParser
   {
-    + {abstract} getFrameBuffersFromPacketBuffer(Buffer& packet_buffer) : void
+    + {abstract} splitPacketBufferToFrameBuffers(Buffer& packet_buffer) : void
     + {abstract} haveFrameBufferToParse() : bool
     + {abstract} parseFrameBuffer() : void
     + {abstract} registerCallback(uint64_t id, const std::function<void(IFrame&)>& callback) : void
@@ -42,7 +42,6 @@ namespace agribot_connection {
 
   class Buffer
   {
-    + getReadLength() : std::size_t
     + clear() : void
     - std::vector<uint8_t> buffer_
     - std::size_t read_length_
@@ -94,7 +93,6 @@ namespace agribot_connection {
   IParser ..> Buffer
   IParser ..> IFrame
   IFrameFactory ..> IFrame
-  IFrame ..> IParsingStrategy
 }
 
 @enduml

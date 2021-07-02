@@ -65,3 +65,9 @@ void TcpSocket::read(Buffer& buffer)
     buffer.read_length_ = read_length;
   }
 }
+
+void TcpSocket::write(const Buffer& buffer)
+{
+  // TODO(all) - implement in the future
+  static_cast<void>(buffer);
+}

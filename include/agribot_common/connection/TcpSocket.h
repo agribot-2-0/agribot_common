@@ -33,4 +33,5 @@ public:
   void connect() override;
   void reconnect() override;
   void read(Buffer& buffer) override;
+  void write(const Buffer& buffer) override;
 };

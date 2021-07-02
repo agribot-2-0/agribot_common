@@ -134,7 +134,6 @@ TEST(LsbFirstParsingStrategyTest, ParseFloat)
 
   // Check assertion
   LsbFirstParsingStrategy strategy;
-  // ASSERT_FLOAT_EQ(value, strategy.getFloat(buffer.begin()));
   ASSERT_FLOAT_EQ(value, strategy.getFloat(buffer.begin()));
 }
 
@@ -148,7 +147,6 @@ TEST(LsbFirstParsingStrategyTest, ParseDouble)
 
   // Check assertion
   LsbFirstParsingStrategy strategy;
-  // ASSERT_FLOAT_EQ(value, strategy.getFloat(buffer.begin()));
   ASSERT_DOUBLE_EQ(value, strategy.getDouble(buffer.begin()));
 }
 
@@ -220,7 +218,6 @@ TEST(MsbFirstParsingStrategyTest, ParseFloat)
 
   // Check assertion
   MsbFirstParsingStrategy strategy;
-  // ASSERT_FLOAT_EQ(value, strategy.getFloat(buffer.begin()));
   ASSERT_FLOAT_EQ(value, strategy.getFloat(buffer.begin()));
 }
 
@@ -234,7 +231,6 @@ TEST(MsbFirstParsingStrategyTest, ParseDouble)
 
   // Check assertion
   MsbFirstParsingStrategy strategy;
-  // ASSERT_FLOAT_EQ(value, strategy.getFloat(buffer.begin()));
   ASSERT_DOUBLE_EQ(value, strategy.getDouble(buffer.begin()));
 }
 
