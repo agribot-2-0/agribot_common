@@ -2,7 +2,7 @@
  * Copyright (C) 2021 Agribot. All rights reserved.
  */
 
-#include <agribot_common/connection/LsbFirstParsingStrategy.h>
+#include <agribot_common/connection/parsing_strategy/LsbFirstParsingStrategy.h>
 
 uint8_t LsbFirstParsingStrategy::getUint8(std::vector<uint8_t>::const_iterator it) const
 {

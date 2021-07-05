@@ -2,7 +2,7 @@
  * Copyright (C) 2021 Agribot. All rights reserved.
  */
 
-#include <agribot_common/connection/TcpSocket.h>
+#include <agribot_common/connection/socket/TcpSocket.h>
 
 TcpSocket::TcpSocket(std::string ip_address, uint16_t port, uint16_t timeout_ms)
   : ip_address_{ ip_address }, port_{ port }, timeout_ms_{ timeout_ms }

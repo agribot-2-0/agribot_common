@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <agribot_common/connection/Buffer.h>
+#include <agribot_common/connection/buffer/Buffer.h>
 
 class ISocket
 {

@@ -2,7 +2,7 @@
  * Copyright (C) 2021 Agribot. All rights reserved.
  */
 
-#include <agribot_common/connection/Buffer.h>
+#include <agribot_common/connection/buffer/Buffer.h>
 
 Buffer::Buffer(std::size_t size) : read_length_(0)
 {
