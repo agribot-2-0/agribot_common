@@ -4,7 +4,8 @@ namespace agribot_connection {
 
   interface IFrame
   {
-    + {abstract} parse(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it, const IParsingStrategy& strategy) : void
+    + {abstract} deserialize(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it) : void
+    + {abstract} serialize(std::vector<uint8_t>::iterator begin_it, std::vector<uint8_t>::iterator end_it) : void
   }
 
   interface IFrameFactory
@@ -38,6 +39,7 @@ namespace agribot_connection {
     + {abstract} connect() : void
     + {abstract} reconnect() : void
     + {abstract} read(Buffer& buffer) : void
+    + {abstract} write(const Buffer& buffer) : void
   }
 
   class Buffer
@@ -76,6 +78,7 @@ namespace agribot_connection {
     + connect() : void
     + reconnect() : void
     + read(Buffer& buffer) : void
+    + write(const Buffer& buffer) : void
     - int socket_fd_
     - struct sockaddr_in server_address_
     - std::string ip_address_
