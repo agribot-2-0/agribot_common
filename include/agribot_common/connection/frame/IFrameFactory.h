@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <agribot_common/connection/IFrame.h>
+#include <agribot_common/connection/frame/IFrame.h>
 
 #include <memory>
 

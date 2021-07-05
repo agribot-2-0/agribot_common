@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <agribot_common/connection/ISocket.h>
+#include <agribot_common/connection/socket/ISocket.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>

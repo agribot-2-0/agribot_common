@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include <agribot_common/connection/IParsingStrategy.h>
+#include <agribot_common/connection/parsing_strategy/IParsingStrategy.h>
 
 #include <cstring>
 #include <string>
 #include <vector>
 
-struct MsbFirstParsingStrategy : public IParsingStrategy
+struct LsbFirstParsingStrategy : public IParsingStrategy
 {
   uint8_t getUint8(std::vector<uint8_t>::const_iterator it) const override;
   uint16_t getUint16(std::vector<uint8_t>::const_iterator it) const override;

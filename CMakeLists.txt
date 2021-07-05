@@ -18,10 +18,10 @@ include_directories(include/)
 add_library(agribot_common src/Can.cpp src/CanFrame.cpp)
 
 add_library(agribot_connection
-  src/connection/Buffer.cpp
-  src/connection/LsbFirstParsingStrategy.cpp
-  src/connection/MsbFirstParsingStrategy.cpp
-  src/connection/TcpSocket.cpp
+  src/connection/buffer/Buffer.cpp
+  src/connection/parsing_strategy/LsbFirstParsingStrategy.cpp
+  src/connection/parsing_strategy/MsbFirstParsingStrategy.cpp
+  src/connection/socket/TcpSocket.cpp
 )
 
 #############
@@ -52,8 +52,8 @@ install(PROGRAMS
 if (CATKIN_ENABLE_TESTING)
   catkin_add_gtest(connection-test 
     test/connection_test.cpp
-    src/connection/LsbFirstParsingStrategy.cpp
-    src/connection/MsbFirstParsingStrategy.cpp
+    src/connection/parsing_strategy/LsbFirstParsingStrategy.cpp
+    src/connection/parsing_strategy/MsbFirstParsingStrategy.cpp
   )
   target_link_libraries(connection-test ${catkin_LIBRARIES} gtest)
 endif()

@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <agribot_common/connection/IParsingStrategy.h>
+#include <agribot_common/connection/parsing_strategy/IParsingStrategy.h>
 
 #include <cstdint>
 #include <vector>

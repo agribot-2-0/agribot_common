@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <agribot_common/connection/Buffer.h>
-#include <agribot_common/connection/IFrame.h>
-#include <agribot_common/connection/IFrameFactory.h>
-#include <agribot_common/connection/IParsingStrategy.h>
+#include <agribot_common/connection/buffer/Buffer.h>
+#include <agribot_common/connection/frame/IFrame.h>
+#include <agribot_common/connection/frame/IFrameFactory.h>
+#include <agribot_common/connection/parsing_strategy/IParsingStrategy.h>
 
 #include <cstdint>
 #include <functional>

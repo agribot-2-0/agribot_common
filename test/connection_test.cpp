@@ -4,8 +4,8 @@
 
 #include <gtest/gtest.h>
 
-#include <agribot_common/connection/LsbFirstParsingStrategy.h>
-#include <agribot_common/connection/MsbFirstParsingStrategy.h>
+#include <agribot_common/connection/parsing_strategy/LsbFirstParsingStrategy.h>
+#include <agribot_common/connection/parsing_strategy/MsbFirstParsingStrategy.h>
 
 #include <algorithm>
 #include <vector>
