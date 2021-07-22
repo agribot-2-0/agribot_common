@@ -22,7 +22,7 @@ class PidTunning:
                                                  queue_size=10)
 
         self.control_msg = AgribotCaterpillar()
-        self.controls = [0, -0.5, 0.5, 0, -0.15, 0.15, 0, -0.075, 0.075]
+        self.controls = [0, -0.15, 0.15, 0, -0.075, 0.075, 0, -0.025, 0.025]
 
     def sp_cb(self, cb_msg):
         pass
@@ -57,8 +57,8 @@ class PidTunning:
             while not rospy.is_shutdown():
                 self.control_msg.front_angular = control
                 self.control_publisher.publish(self.control_msg)
-                if control > 0 and self.current_proccesvalue > math.radians(40): break
-                if control < 0 and self.current_proccesvalue < math.radians(-40): break
+                if control > 0 and self.current_proccesvalue > math.radians(30): break
+                if control < 0 and self.current_proccesvalue < math.radians(-30): break
                 if counter > 50 and control == 0: break
                 counter += 1
                 rate.sleep()
