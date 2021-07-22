@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(agribot_common)
+add_compile_options(-std=c++17 -Wall -Wextra -pedantic -Werror)
 
 find_package(catkin REQUIRED)
 
@@ -7,7 +8,7 @@ catkin_python_setup()
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME} agribot_common
+  LIBRARIES ${PROJECT_NAME} agribot_common agribot_connection
 )
 
 ###########
@@ -16,11 +17,18 @@ catkin_package(
 include_directories(include/)
 add_library(agribot_common src/Can.cpp src/CanFrame.cpp)
 
+add_library(agribot_connection
+  src/connection/buffer/Buffer.cpp
+  src/connection/parsing_strategy/LsbFirstParsingStrategy.cpp
+  src/connection/parsing_strategy/MsbFirstParsingStrategy.cpp
+  src/connection/socket/TcpSocket.cpp
+)
+
 #############
 ## Install ##
 #############
 
-install(TARGETS agribot_common
+install(TARGETS agribot_common agribot_connection
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -40,3 +48,12 @@ install(PROGRAMS
 #############
 ## Testing ##
 #############
+
+if (CATKIN_ENABLE_TESTING)
+  catkin_add_gtest(connection-test 
+    test/connection_test.cpp
+    src/connection/parsing_strategy/LsbFirstParsingStrategy.cpp
+    src/connection/parsing_strategy/MsbFirstParsingStrategy.cpp
+  )
+  target_link_libraries(connection-test ${catkin_LIBRARIES} gtest)
+endif()
