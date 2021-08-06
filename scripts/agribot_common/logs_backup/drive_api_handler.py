@@ -14,7 +14,6 @@ class DriveApiHandler:
         self.creds = None
         self.service = None
 
-
     def checkForToken(self, key_path):
         """Checks for token, if there is none - creates one from credentials.json.
         """
@@ -22,17 +21,18 @@ class DriveApiHandler:
         # The file token.json stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
-        if os.path.exists(key_path+"token.json"):
-            self.creds = Credentials.from_authorized_user_file(key_path+"token.json", SCOPES)
+        if os.path.exists(key_path + "token.json"):
+            self.creds = Credentials.from_authorized_user_file(key_path + "token.json", SCOPES)
         # If there are no (valid) credentials available, let the user log in.
         if not self.creds or not self.creds.valid:
             if self.creds and self.creds.expired and self.creds.refresh_token:
                 self.creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(key_path+"credentials.json", SCOPES)
+                flow = InstalledAppFlow.from_client_secrets_file(key_path + "credentials.json",
+                                                                 SCOPES)
                 self.creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
-            with open(key_path+"token.json", "w") as token:
+            with open(key_path + "token.json", "w") as token:
                 token.write(self.creds.to_json())
         self.service = build("drive", "v3", credentials=self.creds)
 

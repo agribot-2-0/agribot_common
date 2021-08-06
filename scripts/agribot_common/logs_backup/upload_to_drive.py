@@ -32,7 +32,6 @@ def main():
     handler.setDir(dir)
     handler.setPath(path)
     handler.setKeyPath(key)
-    
 
     # SEARCHING IN LOCAL FOLDERS FOR TILL IN HOUR FOLDERS
     while True:

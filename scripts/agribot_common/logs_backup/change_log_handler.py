@@ -16,11 +16,10 @@ class ChangeLog:
 
     def setPath(self, new_path):
         self.path = new_path + self.dir
-    
+
     def setKeyPath(self, new_key):
         self.drive_handler.checkForToken(new_key)
         self.checkFileId()
-
 
     def checkFileId(self):
         items = self.drive_handler.getResults()
