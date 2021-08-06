@@ -8,8 +8,6 @@ class ChangeLog:
     def __init__(self):
         self.drive_handler = DriveApiHandler()
         self.fileID = None
-        self.drive_handler.checkForToken()
-        self.checkFileId()
         self.path = None
         self.dir = None
 
@@ -18,6 +16,11 @@ class ChangeLog:
 
     def setPath(self, new_path):
         self.path = new_path + self.dir
+    
+    def setKeyPath(self, new_key):
+        self.drive_handler.checkForToken(new_key)
+        self.checkFileId()
+
 
     def checkFileId(self):
         items = self.drive_handler.getResults()
