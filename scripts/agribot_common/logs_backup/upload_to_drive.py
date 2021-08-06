@@ -9,7 +9,7 @@ def main():
     parser.add_argument('-p',
                         metavar="PATH_TO_LOGS",
                         required=False,
-                        default='/home/michalina/',
+                        default='/home/agribot1/',
                         help="Path to folder 'logs' Must be full path, e.g. /home/agribot/")
     parser.add_argument('-f',
                         metavar="FOLDER_NAME",
@@ -20,7 +20,7 @@ def main():
         '-k',
         metavar="PATH_TO_KEY",
         required=False,
-        default='/home/michalina/agribot/configs/base/drive_api_key/',
+        default='/home/agribot1/agribot/configs/base/drive_api_key/',
         help=
         "Path to the folder which contains the drive_api_key. Key must me named 'credentials.json'."
     )
