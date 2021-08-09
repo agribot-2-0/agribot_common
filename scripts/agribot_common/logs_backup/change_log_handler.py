@@ -16,7 +16,7 @@ class ChangeLog:
     def set_path(self, new_path):
         self._path = os.path.join(new_path, self._dir)
 
-    def check_for_tokenFromPath(self, new_key):
+    def check_for_token_from_path(self, new_key):
         self._drive_handler.check_for_token(new_key)
         self.set_file_id()
 
@@ -52,13 +52,7 @@ class ChangeLog:
         remote_file_list = [
             path_name['name'] for path_name in self._drive_handler.getFileList(parent=id)
         ]
-        print(path)
-        print(local_file_list)
-        # print(remote_file_list)
-        # for dir in local_dir_list:
-        #     if os.path.isdir(dir):
-        #         print(dir)
-        # print(remote_dir_list)
+
         for local_file in local_file_list:
             if local_file not in remote_file_list:
                 self._drive_handler.create_txt_file(path=path, name=local_file, parent=id)

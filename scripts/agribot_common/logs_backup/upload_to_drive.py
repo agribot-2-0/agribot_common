@@ -29,13 +29,13 @@ def main():
     dir = args.f
     key = args.k
     handler = ChangeLog()
-    handler.setDir(dir)
-    handler.setPath(path)
-    handler.check_for_tokenFromPath(key)
+    handler.set_dir(dir)
+    handler.set_path(path)
+    handler.check_for_token_from_path(key)
 
     # SEARCHING IN LOCAL FOLDERS FOR TILL IN HOUR FOLDERS
     while True:
-        handler.logChangesInDirectory()
+        handler.log_changes_in_directory()
 
 
 if __name__ == "__main__":
