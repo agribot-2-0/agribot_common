@@ -1,85 +1,76 @@
 import time
-from posix import listdir
 import os
 from drive_api_handler import DriveApiHandler
 
 
 class ChangeLog:
     def __init__(self):
-        self.drive_handler = DriveApiHandler()
-        self.fileID = None
-        self.path = None
-        self.dir = None
+        self._drive_handler = DriveApiHandler()
+        self._file_id = None
+        self._path = None
+        self._dir = None
 
-    def setDir(self, new_dir):
-        self.dir = new_dir
+    def set_dir(self, new_dir):
+        self._dir = new_dir
 
-    def setPath(self, new_path):
-        self.path = new_path + self.dir
+    def set_path(self, new_path):
+        self._path = os.path.join(new_path, self._dir)
 
-    def setKeyPath(self, new_key):
-        self.drive_handler.checkForToken(new_key)
-        self.checkFileId()
+    def check_for_tokenFromPath(self, new_key):
+        self._drive_handler.check_for_token(new_key)
+        self.set_file_id()
 
-    def checkFileId(self):
-        items = self.drive_handler.getResults()
+    def set_file_id(self):
+        items = self._drive_handler.get_directory_list()
 
         if not items:
-            self.fileID = self.drive_handler.create()
+            self._file_id = self._drive_handler.create_directory()
         else:
             for item in items:
                 if item["name"] == "Logs":
-                    self.fileID = item["id"]
-            if self.fileID == None:
-                self.fileID = self.drive_handler.create()
+                    self._file_id = item["id"]
+            if self._file_id == None:
+                self._file_id = self._drive_handler.create_directory()
 
-    def printFileId(self):
-        print(self.fileID)
-
-    def getFolderLists(self, *, path=None, id=None):
+    def log_changes_in_directory(self, *, path=None, id=None):
         if path == None:
-            path = self.path
+            path = self._path
         if id == None:
-            id = self.fileID
-        type = None
-        if '.log' not in path and 'bag' not in path:
-            folders = dict(local=sorted(os.listdir(path)))
-            if len(folders['local']) > 0:
-                if 'log' in folders['local'][0] or 'bag' in folders['local'][0]:
-                    type = 'file'
-                else:
-                    type = 'folder'
-            if len(folders['local']) == 0:
-                return None
-            folders['remote'] = sorted(self.drive_handler.getResults(parent=id, type=type),
-                                       key=lambda k: k["name"])
-            folders['type'] = type
-            return folders
-        else:
-            return None
+            id = self._file_id
 
-    def logChangesInFolder(self, *, path=None, id=None):
-        if path == None:
-            path = self.path
-        if id == None:
-            id = self.fileID
-        folders = self.getFolderLists(path=path, id=id)
-        if folders != None:
-            if len(folders['remote']) > 0:
-                i = 0
-                while len(folders['local']) - len(folders['remote']) > 0:
-                    while (i >= len(folders['remote']) or folders['local'][i] !=
-                           folders['remote'][i]['name']) and i < len(folders['local']):
-                        new_file_id = self.drive_handler.create(name=folders['local'][i],
-                                                                parents=id,
-                                                                type=folders['type'])
-                        folders['local'].pop(i)
-                    i = i + 1
-            else:
-                for i in range(0, len(folders['local'])):
-                    new_file_id = self.drive_handler.create(name=folders['local'][i],
-                                                            parents=id,
-                                                            type=folders['type'])
-            folders = self.getFolderLists(path=path, id=id)
-            for folder in folders['remote']:
-                self.logChangesInFolder(path=path + "/" + str(folder['name']), id=folder['id'])
+        local_dir_list = [
+            path_name for path_name in os.listdir(path)
+            if os.path.isdir(os.path.join(path, path_name))
+        ]
+        local_file_list = [
+            path_name for path_name in os.listdir(path)
+            if os.path.isfile(os.path.join(path, path_name))
+        ]
+        remote_dir_list = [
+            path_name['name'] for path_name in self._drive_handler.get_directory_list(parent=id)
+        ]
+        remote_file_list = [
+            path_name['name'] for path_name in self._drive_handler.getFileList(parent=id)
+        ]
+        print(path)
+        print(local_file_list)
+        # print(remote_file_list)
+        # for dir in local_dir_list:
+        #     if os.path.isdir(dir):
+        #         print(dir)
+        # print(remote_dir_list)
+        for local_file in local_file_list:
+            if local_file not in remote_file_list:
+                self._drive_handler.create_txt_file(path=path, name=local_file, parent=id)
+
+        for local_directory in local_dir_list:
+            if local_directory not in remote_dir_list:
+                self._drive_handler.create_directory(name=local_directory, parent=id)
+
+        remote_dir_list_with_id = [
+            name for name in self._drive_handler.get_directory_list(parent=id)
+        ]
+
+        for remote_directory in remote_dir_list_with_id:
+            self.log_changes_in_directory(path=os.path.join(path, remote_directory['name']),
+                                          id=remote_directory['id'])

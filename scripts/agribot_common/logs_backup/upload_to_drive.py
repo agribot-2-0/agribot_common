@@ -31,11 +31,11 @@ def main():
     handler = ChangeLog()
     handler.setDir(dir)
     handler.setPath(path)
-    handler.setKeyPath(key)
+    handler.check_for_tokenFromPath(key)
 
     # SEARCHING IN LOCAL FOLDERS FOR TILL IN HOUR FOLDERS
     while True:
-        handler.logChangesInFolder()
+        handler.logChangesInDirectory()
 
 
 if __name__ == "__main__":
