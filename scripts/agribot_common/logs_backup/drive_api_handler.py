@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import os.path
 from google.oauth2.credentials import Credentials
-# from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
@@ -38,7 +37,7 @@ class DriveApiHandler:
                 token.write(self._creds.to_json())
         self.service = build("drive", "v3", credentials=self._creds)
 
-    def get_file_list(self, *, parent='root'):
+    def get_file_list(self, parent='root'):
         results = self.service.files().list(
             q="'" + str(parent) +
             "' in parents and mimeType!='application/vnd.google-apps.folder' and trashed = false",
@@ -47,7 +46,7 @@ class DriveApiHandler:
         ).execute()
         return results.get("files", [])
 
-    def get_directory_list(self, *, parent='root'):
+    def get_directory_list(self, parent='root'):
         results = self.service.files().list(
             q="'" + str(parent) +
             "' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false",

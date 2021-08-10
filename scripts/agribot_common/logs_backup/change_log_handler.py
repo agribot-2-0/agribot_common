@@ -1,11 +1,11 @@
 #!/usr/bin/python3
+import yaml
 import os
 from drive_api_handler import DriveApiHandler
-import yaml
 
 
 class ChangeLog:
-    def __init__(self, *, path_to_yaml_file=None):
+    def __init__(self, path_to_yaml_file=None):
         self._drive_handler = DriveApiHandler()
         self._file_id = None
         self._rsn = None

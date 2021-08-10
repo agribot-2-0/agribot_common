@@ -1,8 +1,7 @@
 #!/usr/bin/python3
-from change_log_handler import ChangeLog
 import argparse
-import os
 import time
+from change_log_handler import ChangeLog
 
 
 def main():
