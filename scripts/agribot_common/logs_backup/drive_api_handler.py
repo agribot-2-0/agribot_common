@@ -1,9 +1,11 @@
+#!/usr/bin/python3
 import os.path
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+# from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
+from google_auth_oauthlib import flow
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
@@ -28,15 +30,15 @@ class DriveApiHandler:
             if self._creds and self._creds.expired and self._creds.refresh_token:
                 self._creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    os.path.join(key_path, "token.json"), SCOPES)
-                self._creds = flow.run_local_server(port=0)
+                flow_ = flow.InstalledAppFlow.from_client_secrets_file(
+                    os.path.join(key_path, "credentials.json"), SCOPES)
+                self._creds = flow_.run_console()
             # Save the credentials for the next run
             with open(os.path.join(key_path, "token.json"), "w") as token:
                 token.write(self._creds.to_json())
         self.service = build("drive", "v3", credentials=self._creds)
 
-    def getFileList(self, *, parent='root'):
+    def get_file_list(self, *, parent='root'):
         results = self.service.files().list(
             q="'" + str(parent) +
             "' in parents and mimeType!='application/vnd.google-apps.folder' and trashed = false",
@@ -57,9 +59,9 @@ class DriveApiHandler:
     def create_txt_file(self, *, name, parent='root', path):
         file_metadata = {"name": str(name), "parents": [str(parent)], "mimeType": "txt/csv"}
         media = MediaFileUpload(str(os.path.join(path, name)))
-        (self.service.files().create(body=file_metadata, media_body=media, fields="id").execute())
+        self.service.files().create(body=file_metadata, media_body=media, fields="id").execute()
 
-    def create_directory(self, *, name='Logs', parent='root'):
+    def create_directory(self, *, name, parent='root'):
         file_metadata = {
             "name": str(name),
             "parents": [str(parent)],

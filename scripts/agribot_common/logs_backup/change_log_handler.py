@@ -1,40 +1,32 @@
-import time
+#!/usr/bin/python3
 import os
 from drive_api_handler import DriveApiHandler
+import yaml
 
 
 class ChangeLog:
-    def __init__(self):
+    def __init__(self, *, path_to_yaml_file=None):
         self._drive_handler = DriveApiHandler()
         self._file_id = None
-        self._path = None
-        self._dir = None
-
-    def set_dir(self, new_dir):
-        self._dir = new_dir
-
-    def set_path(self, new_path):
-        self._path = os.path.join(new_path, self._dir)
+        self._rsn = None
+        with open(path_to_yaml_file) as yaml_file:
+            self._rsn = yaml.load(yaml_file, Loader=yaml.FullLoader)['rsn']
 
     def check_for_token_from_path(self, new_key):
         self._drive_handler.check_for_token(new_key)
-        self.set_file_id()
+        self.initiate_file_id()
 
-    def set_file_id(self):
-        items = self._drive_handler.get_directory_list()
+    def initiate_file_id(self):
+        directories = self._drive_handler.get_directory_list()
+        directory = next((dir for dir in directories if dir["name"] == "Logs" + str(self._rsn)),
+                         None)
 
-        if not items:
-            self._file_id = self._drive_handler.create_directory()
+        if directory is None:
+            self._file_id = self._drive_handler.create_directory(name="Logs" + str(self._rsn))
         else:
-            for item in items:
-                if item["name"] == "Logs":
-                    self._file_id = item["id"]
-            if self._file_id == None:
-                self._file_id = self._drive_handler.create_directory()
+            self._file_id = directory["id"]
 
-    def log_changes_in_directory(self, *, path=None, id=None):
-        if path == None:
-            path = self._path
+    def log_changes_in_directory(self, *, path, id=None):
         if id == None:
             id = self._file_id
 
@@ -50,7 +42,7 @@ class ChangeLog:
             path_name['name'] for path_name in self._drive_handler.get_directory_list(parent=id)
         ]
         remote_file_list = [
-            path_name['name'] for path_name in self._drive_handler.getFileList(parent=id)
+            path_name['name'] for path_name in self._drive_handler.get_file_list(parent=id)
         ]
 
         for local_file in local_file_list:

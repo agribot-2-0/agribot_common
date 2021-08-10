@@ -1,7 +1,8 @@
-from __future__ import print_function
-from drive_api_handler import DriveApiHandler
+#!/usr/bin/python3
 from change_log_handler import ChangeLog
 import argparse
+import os
+import time
 
 
 def main():
@@ -9,13 +10,8 @@ def main():
     parser.add_argument('-p',
                         metavar="PATH_TO_LOGS",
                         required=False,
-                        default='/home/agribot1/',
-                        help="Path to folder 'logs' Must be full path, e.g. /home/agribot/")
-    parser.add_argument('-f',
-                        metavar="FOLDER_NAME",
-                        required=False,
-                        default='logs',
-                        help="Name of the folder which contains logs, default = logs")
+                        default='/home/agribot1/logs',
+                        help="Path to folder to be uploaded to Drive.")
     parser.add_argument(
         '-k',
         metavar="PATH_TO_KEY",
@@ -24,18 +20,22 @@ def main():
         help=
         "Path to the folder which contains the drive_api_key. Key must me named 'credentials.json'."
     )
+    parser.add_argument('-yaml',
+                        metavar="PATH_TO_YAML_FILE",
+                        required=False,
+                        default="/home/agribot1/agribot/configs/base/robot.yaml",
+                        help="Path to yaml file containing robots serial number (RSN).")
     args = parser.parse_args()
     path = args.p
-    dir = args.f
     key = args.k
-    handler = ChangeLog()
-    handler.set_dir(dir)
-    handler.set_path(path)
+    path_to_yaml = args.yaml
+    handler = ChangeLog(path_to_yaml_file=path_to_yaml)
     handler.check_for_token_from_path(key)
 
-    # SEARCHING IN LOCAL FOLDERS FOR TILL IN HOUR FOLDERS
+    # Recursively uploading all files and folders in given directory
     while True:
-        handler.log_changes_in_directory()
+        time.sleep(5)
+        handler.log_changes_in_directory(path=path)
 
 
 if __name__ == "__main__":
