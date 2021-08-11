@@ -9,7 +9,7 @@ from google_auth_oauthlib import flow
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 
-class DriveApiHandler:
+class DriveApiHandler():  # pylint: disable=old-style-class
     def __init__(self):
         self._creds = None
         self.service = None
@@ -66,5 +66,4 @@ class DriveApiHandler:
             "parents": [str(parent)],
             "mimeType": "application/vnd.google-apps.folder"
         }
-        file = (self.service.files().create(body=file_metadata, fields="id").execute())
-        return file.get('id')
+        return self.service.files().create(body=file_metadata, fields="id").execute().get('id')

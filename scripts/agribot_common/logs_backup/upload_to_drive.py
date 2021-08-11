@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import argparse
 import time
-from change_log_handler import ChangeLog
+from agribot_common.logs_backup.change_log_handler import ChangeLog
 
 
 def main():
@@ -33,7 +33,6 @@ def main():
 
     # Recursively uploading all files and folders in given directory
     while True:
-        time.sleep(5)
         handler.log_changes_in_directory(path=path)
 
 
