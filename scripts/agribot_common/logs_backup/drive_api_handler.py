@@ -55,12 +55,12 @@ class DriveApiHandler:
         ).execute()
         return results.get("files", [])
 
-    def create_txt_file(self, *ignore, name, parent='root', path):
+    def create_txt_file(self, *, name, parent='root', path):  #pylint: disable=syntax-error
         file_metadata = {"name": str(name), "parents": [str(parent)], "mimeType": "txt/csv"}
         media = MediaFileUpload(str(os.path.join(path, name)))
         self.service.files().create(body=file_metadata, media_body=media, fields="id").execute()
 
-    def create_directory(self, *, name, parent='root'):
+    def create_directory(self, *, name, parent='root'):  #pylint: disable=syntax-error
         file_metadata = {
             "name": str(name),
             "parents": [str(parent)],
