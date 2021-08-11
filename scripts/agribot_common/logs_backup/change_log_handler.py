@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import codecs
 import hashlib
 import os
 import yaml
@@ -8,8 +7,8 @@ from agribot_common.logs_backup.drive_api_handler import DriveApiHandler
 
 def md5(fname):
     hash_md5 = hashlib.md5()
-    with open(fname, "rb") as f:
-        for chunk in iter(lambda: f.read(4096), b""):
+    with open(fname, "rb") as file_name:
+        for chunk in iter(lambda: file_name.read(4096), b""):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
