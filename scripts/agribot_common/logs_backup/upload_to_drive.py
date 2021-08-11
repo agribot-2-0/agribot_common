@@ -37,7 +37,7 @@ def main():
     while not killer.kill_now:
         handler.log_changes_in_directory(path=path)
         time.sleep(1)
-    print("Exited successfully.")
+    print("Exited successfully.")  # pylint: disable=superfluous-parens
 
 
 if __name__ == "__main__":
