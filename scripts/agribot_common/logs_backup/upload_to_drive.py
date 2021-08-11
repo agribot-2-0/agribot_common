@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+from __future__ import print_function
 import argparse
 import time
 from agribot_common.logs_backup.change_log_handler import ChangeLog
@@ -37,7 +38,7 @@ def main():
     while not killer.kill_now:
         handler.log_changes_in_directory(path=path)
         time.sleep(1)
-    print("Exited successfully.")  # pylint: disable=superfluous-parens
+    print("Exited successfully.")
 
 
 if __name__ == "__main__":
