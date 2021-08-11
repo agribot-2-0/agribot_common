@@ -2,9 +2,11 @@
 import argparse
 import time
 from agribot_common.logs_backup.change_log_handler import ChangeLog
+from agribot_common.logs_backup.graceful_killer import Killer
 
 
 def main():
+    killer = Killer()
     parser = argparse.ArgumentParser(description='Upload logs into drive.')
     parser.add_argument('-p',
                         metavar="PATH_TO_LOGS",
@@ -32,8 +34,10 @@ def main():
     handler.check_for_token_from_path(key)
 
     # Recursively uploading all files and folders in given directory
-    while True:
+    while not killer.kill_now:
         handler.log_changes_in_directory(path=path)
+        time.sleep(1)
+    print("Exited successfully.")
 
 
 if __name__ == "__main__":
