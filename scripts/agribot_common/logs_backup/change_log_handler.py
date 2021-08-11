@@ -42,7 +42,7 @@ class ChangeLog:  # pylint: disable=old-style-class
             path_name['name'] for path_name in self._drive_handler.get_directory_list(parent=dir_id)
         ]
         remote_file_list = [
-            path_name['name'] for path_name in self._drive_handler.get_file_list(parent=die_id)
+            path_name['name'] for path_name in self._drive_handler.get_file_list(parent=dir_id)
         ]
 
         for local_file in local_file_list:
