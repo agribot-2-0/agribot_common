@@ -26,7 +26,7 @@ class ChangeLog:
         else:
             self._file_id = directory["id"]
 
-    def log_changes_in_directory(self, *, path, id=None):
+    def log_changes_in_directory(self, *ignore, path, id=None):
         if id == None:
             id = self._file_id
 
