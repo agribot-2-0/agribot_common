@@ -12,7 +12,8 @@ class Killer:  # pylint: disable=old-style-class,too-few-public-methods
         signal.signal(signal.SIGQUIT, self.exit)
 
     def exit(self, signal_number):
-        print(  # pylint: disable=no-member
-            "Received ", signal.strsignal(signal_number),
+        print(
+            "Received ",
+            signal.strsignal(signal_number),  # pylint: disable=no-member
             ". Quitting after the synchronization finishes.")
         self.kill_now = True
