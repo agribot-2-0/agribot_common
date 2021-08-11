@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# pylint: skip-file
+#TODO(all): delete pylint comment when on python3
 import yaml
 import os
 from drive_api_handler import DriveApiHandler
@@ -26,7 +28,6 @@ class ChangeLog:
         else:
             self._file_id = directory["id"]
 
-    # pylint: disable=syntax-error
     def log_changes_in_directory(self, *, path, id=None):
         if id == None:
             id = self._file_id

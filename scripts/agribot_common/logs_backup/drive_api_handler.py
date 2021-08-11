@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# pylint: skip-file
+#TODO(all): delete pylint comment when on python3
 import os.path
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
@@ -55,12 +57,12 @@ class DriveApiHandler:
         ).execute()
         return results.get("files", [])
 
-    def create_txt_file(self, *, name, parent='root', path):  # pylint: disable=syntax-error
+    def create_txt_file(self, *, name, parent='root', path):
         file_metadata = {"name": str(name), "parents": [str(parent)], "mimeType": "txt/csv"}
         media = MediaFileUpload(str(os.path.join(path, name)))
         self.service.files().create(body=file_metadata, media_body=media, fields="id").execute()
 
-    def create_directory(self, *, name, parent='root'):  # pylint: disable=syntax-error
+    def create_directory(self, *, name, parent='root'):
         file_metadata = {
             "name": str(name),
             "parents": [str(parent)],
