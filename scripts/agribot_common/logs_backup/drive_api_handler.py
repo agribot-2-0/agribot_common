@@ -12,7 +12,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 class DriveApiHandler():  # pylint: disable=old-style-class
     def __init__(self):
         self._creds = None
-        self.service = None
+        self._service = None
 
     def check_for_token(self, key_path):
         """Checks for token, if there is none - creates one from credentials.json.
@@ -35,30 +35,28 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             # Save the credentials for the next run
             with open(os.path.join(key_path, "token.json"), "w") as token:
                 token.write(self._creds.to_json())
-        self.service = build("drive", "v3", credentials=self._creds)
+        self._service = build("drive", "v3", credentials=self._creds)
 
     def get_file_list(self, parent='root'):
-        results = self.service.files().list(
+        results = self._service.files().list(
             q="'" + str(parent) +
             "' in parents and mimeType!='application/vnd.google-apps.folder' and trashed = false",
-            pageSize=10,
-            fields="nextPageToken, files(id, name)",
+            fields="files(id, name,md5Checksum)",
         ).execute()
         return results.get("files", [])
 
     def get_directory_list(self, parent='root'):
-        results = self.service.files().list(
+        results = self._service.files().list(
             q="'" + str(parent) +
             "' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false",
-            pageSize=10,
-            fields="nextPageToken, files(id, name)",
+            fields="files(id, name)",
         ).execute()
         return results.get("files", [])
 
     def create_txt_file(self, name, path, parent='root'):
         file_metadata = {"name": str(name), "parents": [str(parent)], "mimeType": "txt/csv"}
         media = MediaFileUpload(str(os.path.join(path, name)))
-        self.service.files().create(body=file_metadata, media_body=media, fields="id").execute()
+        self._service.files().create(body=file_metadata, media_body=media, fields="id").execute()
 
     def create_directory(self, name, parent='root'):
         file_metadata = {
@@ -66,4 +64,4 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             "parents": [str(parent)],
             "mimeType": "application/vnd.google-apps.folder"
         }
-        return self.service.files().create(body=file_metadata, fields="id").execute().get('id')
+        return self._service.files().create(body=file_metadata, fields="id").execute().get('id')
