@@ -11,7 +11,7 @@ class Killer:  # pylint: disable=old-style-class,too-few-public-methods
         signal.signal(signal.SIGTERM, self.exit)
         signal.signal(signal.SIGQUIT, self.exit)
 
-    def exit(self, signal_number, *ignore):  # pylint: disable=unused-argument
+    def exit(self, signal_number, _):
         print(
             "Received ",
             signal.strsignal(signal_number),  # pylint: disable=no-member
