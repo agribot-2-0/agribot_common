@@ -65,7 +65,7 @@ class ChangeLog:  # pylint: disable=old-style-class
             elif any((local_file["name"] == remote_file['name']
                       and local_file['checksum'] != remote_file['checksum'])
                      for remote_file in remote_file_list):
-                self._drive_handler.create_txt_file(path=path,
+                self._drive_handler.update_txt_file(path=path,
                                                     name=local_file['name'],
                                                     parent=dir_id)
 

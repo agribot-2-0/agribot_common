@@ -65,3 +65,14 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             "mimeType": "application/vnd.google-apps.folder"
         }
         return self._service.files().create(body=file_metadata, fields="id").execute().get('id')
+
+    def update_txt_file(self, name, path, parent='root'):
+        temp_file_id = None
+        file_metadata = {"name": str(name), "mimeType": "txt/csv"}
+        media = MediaFileUpload(str(os.path.join(path, name)))
+        remote_file_list = self.get_file_list(parent=parent)
+        for remote_file in remote_file_list:
+            if remote_file['name'] == name:
+                temp_file_id = remote_file['id']
+        self._service.files().update(body=file_metadata, media_body=media,
+                                     fileId=temp_file_id).execute()
