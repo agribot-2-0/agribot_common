@@ -39,37 +39,37 @@ class DriveApiHandler():  # pylint: disable=old-style-class
 
     def get_file_list(self, parent='root'):
         results = self._service.files().list(
-            q="'" + str(parent) +
+            q="'" + parent +
             "' in parents and mimeType!='application/vnd.google-apps.folder' and trashed = false",
-            fields="files(id, name,md5Checksum)",
+            fields="files(id, name, md5Checksum)",
         ).execute()
         return results.get("files", [])
 
     def get_directory_list(self, parent='root'):
         results = self._service.files().list(
-            q="'" + str(parent) +
+            q="'" + parent +
             "' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false",
             fields="files(id, name)",
         ).execute()
         return results.get("files", [])
 
     def create_txt_file(self, name, path, parent='root'):
-        file_metadata = {"name": str(name), "parents": [str(parent)], "mimeType": "txt/csv"}
-        media = MediaFileUpload(str(os.path.join(path, name)))
+        file_metadata = {"name": name, "parents": [parent], "mimeType": "txt/csv"}
+        media = MediaFileUpload(os.path.join(path, name))
         self._service.files().create(body=file_metadata, media_body=media, fields="id").execute()
 
     def create_directory(self, name, parent='root'):
         file_metadata = {
-            "name": str(name),
-            "parents": [str(parent)],
+            "name": name,
+            "parents": [parent],
             "mimeType": "application/vnd.google-apps.folder"
         }
         return self._service.files().create(body=file_metadata, fields="id").execute().get('id')
 
     def update_txt_file(self, name, path, parent='root'):
         temp_file_id = None
-        file_metadata = {"name": str(name), "mimeType": "txt/csv"}
-        media = MediaFileUpload(str(os.path.join(path, name)))
+        file_metadata = {"name": name, "mimeType": "txt/csv"}
+        media = MediaFileUpload(os.path.join(path, name))
         remote_file_list = self.get_file_list(parent=parent)
         for remote_file in remote_file_list:
             if remote_file['name'] == name:
