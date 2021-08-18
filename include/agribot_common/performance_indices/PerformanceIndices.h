@@ -10,7 +10,7 @@
 class IndicesCalculator
 {
 public:
-  IndicesCalculator(ros::NodeHandle* nh);
+  explicit IndicesCalculator(ros::NodeHandle* nh);
   std_msgs::Float64 iae_, itae_, ise_, itse_;
   void errorCallback(const std_msgs::Float64& msg);
   void run();
