@@ -1,0 +1,5 @@
+<launch>
+
+  <node name="performance_indices_node" pkg="agribot_common" type="performance_indices_node" />
+
+</launch>
