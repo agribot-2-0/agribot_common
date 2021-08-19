@@ -27,15 +27,25 @@ class ChangeLog:  # pylint: disable=old-style-class
 
     def initiate_file_id(self):
         directories = self._drive_handler.get_directory_list()
-        directory = next((dir for dir in directories if dir["name"] == "Logs" + str(self._rsn)),
-                         None)
+        directory = next((dir for dir in directories if dir["name"] == "agribot_log_backup"), None)
 
         if directory is None:
-            self._file_id = self._drive_handler.create_directory(name="Logs" + str(self._rsn))
+            self._file_id = self._drive_handler.create_directory(name="agribot_log_backup")
+            self._file_id = self._drive_handler.create_directory(name=self._rsn,
+                                                                 parent=self._file_id)
         else:
             self._file_id = directory["id"]
+            directories = self._drive_handler.get_directory_list(parent=self._file_id)
+            directory = next((dir for dir in directories if dir["name"] == self._rsn), None)
+
+            if directory is None:
+                self._file_id = self._drive_handler.create_directory(name=self._rsn,
+                                                                     parent=self._file_id)
+            else:
+                self._file_id = directory["id"]
 
     def log_changes_in_directory(self, path, dir_id=None):
+        print(path)
         if dir_id is None:
             dir_id = self._file_id
 

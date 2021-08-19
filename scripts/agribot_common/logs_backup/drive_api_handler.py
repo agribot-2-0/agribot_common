@@ -5,6 +5,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google_auth_oauthlib import flow
+from google.auth import exceptions
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
@@ -30,7 +31,10 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 self._creds.refresh(Request())
             else:
                 flow_ = flow.InstalledAppFlow.from_client_secrets_file(
-                    os.path.join(key_path, "credentials.json"), SCOPES)
+                    os.path.join(
+                        key_path,
+                        "client_secret_1088415424839-ftesriv7jrc1hku5v9r0b4uvlo8ionc4.apps.googleusercontent.com.json"
+                    ), SCOPES)
                 self._creds = flow_.run_console()
             # Save the credentials for the next run
             with open(os.path.join(key_path, "token.json"), "w") as token:
@@ -54,6 +58,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
         return results.get("files", [])
 
     def create_txt_file(self, name, path, parent='root'):
+        print("  Uploading file ", name)
         file_metadata = {"name": name, "parents": [parent], "mimeType": "txt/csv"}
         media = MediaFileUpload(os.path.join(path, name))
         self._service.files().create(body=file_metadata, media_body=media, fields="id").execute()
@@ -67,6 +72,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
         return self._service.files().create(body=file_metadata, fields="id").execute().get('id')
 
     def update_txt_file(self, name, path, parent='root'):
+        print("Updating file ", name)
         temp_file_id = None
         file_metadata = {"name": name, "mimeType": "txt/csv"}
         media = MediaFileUpload(os.path.join(path, name))
