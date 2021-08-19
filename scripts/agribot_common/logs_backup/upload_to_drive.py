@@ -14,14 +14,11 @@ def main():
                         required=False,
                         default='/home/agribot1/logs',
                         help="Path to folder to be uploaded to Drive.")
-    parser.add_argument(
-        '-k',
-        metavar="PATH_TO_KEY",
-        required=False,
-        default='/home/agribot1/agribot/configs/base/drive_api_key/',
-        help=
-        "Path to the folder which contains the drive_api_key. Key must me named 'credentials.json'."
-    )
+    parser.add_argument('-k',
+                        metavar="PATH_TO_KEY",
+                        required=False,
+                        default='/home/agribot1/agribot/configs/base/drive_api_key/',
+                        help="Path to the folder which contains the drive_api_key.")
     parser.add_argument('-yaml',
                         metavar="PATH_TO_YAML_FILE",
                         required=False,
