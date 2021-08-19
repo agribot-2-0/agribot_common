@@ -8,15 +8,15 @@ void IndicesCalculator::errorCallback(const std_msgs::Float64& msg)
 {
   stop = ros::Time::now();
   ros::Duration wait_ = stop - start;
-  ise_.data += pow(msg.data, 2);
-  iae_.data += abs(msg.data);
-  itse_.data += pow(msg.data * wait_.toSec(), 2);
-  itae_.data += abs(msg.data) * wait_.toSec();
+  start = ros::Time::now();
+  ise_.data += pow(msg.data * wait_.toSec(), 2);
+  iae_.data += abs(msg.data * wait_.toSec());
+  itse_.data += pow(msg.data * pow(wait_.toSec(), 2), 2);
+  itae_.data += abs(msg.data) * pow(wait_.toSec(), 2);
   ise_publisher_.publish(ise_);
   iae_publisher_.publish(iae_);
   itse_publisher_.publish(itse_);
   itae_publisher_.publish(itae_);
-  start = ros::Time::now();
 }
 
 void IndicesCalculator::run()
