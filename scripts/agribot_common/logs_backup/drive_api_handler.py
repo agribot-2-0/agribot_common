@@ -31,9 +31,8 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             else:
                 flow_ = flow.InstalledAppFlow.from_client_secrets_file(
                     os.path.join(
-                        key_path,
-                        "client_secret_1088415424839-ftesriv7jrc1hku5v9r0b4uvlo8ionc4.apps.googleusercontent.com.json"
-                    ), SCOPES)
+                        key_path, "client_secret_1088415424839-ftesriv7jrc1hku5v9r0b4uvlo8ionc4." +
+                        "apps.googleusercontent.com.json"), SCOPES)
                 self._creds = flow_.run_console()
             # Save the credentials for the next run
             with open(os.path.join(key_path, "token.json"), "w") as token:
