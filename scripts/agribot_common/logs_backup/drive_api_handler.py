@@ -5,7 +5,6 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google_auth_oauthlib import flow
-from google.auth import exceptions
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
