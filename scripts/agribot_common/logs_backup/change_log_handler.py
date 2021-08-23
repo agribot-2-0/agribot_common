@@ -46,6 +46,7 @@ class ChangeLog:  # pylint: disable=old-style-class
                 self._file_id = directory["id"]
 
     def log_changes_in_directory(self, path, dir_id=None):
+
         print(path)
         if dir_id is None:
             dir_id = self._file_id
