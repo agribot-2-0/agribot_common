@@ -1,12 +1,13 @@
 #!/usr/bin/python3
+from __future__ import print_function
 import os.path
+import socket
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google_auth_oauthlib import flow
 from httplib2 import error
-import socket
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
@@ -55,7 +56,8 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             try:
                 results = self._service.files().list(
                     q="'" + parent +
-                    "' in parents and mimeType!='application/vnd.google-apps.folder' and trashed = false",
+                    "' in parents and mimeType!='application/vnd.google-apps.folder' " +
+                    "and trashed = false",
                     fields="files(id, name, md5Checksum)",
                 ).execute()
                 return results.get("files", [])
@@ -71,7 +73,8 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             try:
                 results = self._service.files().list(
                     q="'" + parent +
-                    "' in parents and mimeType='application/vnd.google-apps.folder' and trashed = false",
+                    "' in parents and mimeType='application/vnd.google-apps.folder' " +
+                    "and trashed = false",
                     fields="files(id, name)",
                 ).execute()
                 return results.get("files", [])
