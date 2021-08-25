@@ -100,8 +100,8 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 while response is None:
                     status, response = request.next_chunk()
                     if status:
-                        print("Uploaded %d%%." % int(status.progress() * 100))
-                print("Upload Complete!")
+                        print("Uploaded {}%.".format(int(status.progress() * 100)))
+                print("Upload of file {} complete!".format(name))
             except socket.timeout:
                 continue
             except error.ServerNotFoundError:
@@ -146,8 +146,8 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 while response is None:
                     status, response = request.next_chunk()
                     if status:
-                        print("Uploaded %d%%." % int(status.progress() * 100))
-                print("Upload Complete!")
+                        print("Uploaded {}%.".format(int(status.progress() * 100)))
+                print("Upload of file {} complete!".format(name))
             except socket.timeout:
                 continue
             except error.ServerNotFoundError:
