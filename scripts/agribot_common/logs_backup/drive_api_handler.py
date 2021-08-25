@@ -93,8 +93,15 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 media = MediaFileUpload(os.path.join(path, name),
                                         resumable=True,
                                         chunksize=256 * 1024)
-                self._service.files().create(body=file_metadata, media_body=media,
-                                             fields="id").execute()
+                request = self._service.files().create(body=file_metadata,
+                                                       media_body=media,
+                                                       fields="id")
+                response = None
+                while response is None:
+                    status, response = request.next_chunk()
+                    if status:
+                        print("Uploaded %d%%." % int(status.progress() * 100))
+                print("Upload Complete!")
             except socket.timeout:
                 continue
             except error.ServerNotFoundError:
@@ -132,9 +139,15 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 for remote_file in remote_file_list:
                     if remote_file['name'] == name:
                         temp_file_id = remote_file['id']
-                self._service.files().update(body=file_metadata,
-                                             media_body=media,
-                                             fileId=temp_file_id).execute()
+                request = self._service.files().update(body=file_metadata,
+                                                       media_body=media,
+                                                       fileId=temp_file_id)
+                response = None
+                while response is None:
+                    status, response = request.next_chunk()
+                    if status:
+                        print("Uploaded %d%%." % int(status.progress() * 100))
+                print("Upload Complete!")
             except socket.timeout:
                 continue
             except error.ServerNotFoundError:
