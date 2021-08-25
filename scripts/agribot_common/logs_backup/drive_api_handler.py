@@ -8,6 +8,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google_auth_oauthlib import flow
 from httplib2 import error
+from tqdm import tqdm
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
@@ -85,30 +86,6 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             else:
                 break
 
-    def create_txt_file(self, name, path, parent='root'):
-        while True:
-            try:
-                print("  Uploading file {}".format(name))
-                file_metadata = {"name": name, "parents": [parent], "mimeType": "txt/csv"}
-                media = MediaFileUpload(os.path.join(path, name),
-                                        resumable=True,
-                                        chunksize=256 * 1024)
-                request = self._service.files().create(body=file_metadata,
-                                                       media_body=media,
-                                                       fields="id")
-                response = None
-                while response is None:
-                    status, response = request.next_chunk()
-                    if status:
-                        print("Uploaded {}%.".format(int(status.progress() * 100)))
-                print("Upload of file {} complete!".format(name))
-            except socket.timeout:
-                continue
-            except error.ServerNotFoundError:
-                continue
-            else:
-                break
-
     def create_directory(self, name, parent='root'):
         while True:
             try:
@@ -129,7 +106,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
     def update_txt_file(self, name, path, parent='root'):
         while True:
             try:
-                print("Updating file ", name)
+                print("  Uploading file {}".format(name))
                 temp_file_id = None
                 file_metadata = {"name": name, "mimeType": "txt/csv"}
                 media = MediaFileUpload(os.path.join(path, name),
@@ -142,12 +119,37 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 request = self._service.files().update(body=file_metadata,
                                                        media_body=media,
                                                        fileId=temp_file_id)
-                response = None
-                while response is None:
-                    status, response = request.next_chunk()
-                    if status:
-                        print("Uploaded {}%.".format(int(status.progress() * 100)))
-                print("Upload of file {} complete!".format(name))
+            except socket.timeout:
+                continue
+            except error.ServerNotFoundError:
+                continue
+            else:
+                break
+        response = None
+        last_status = 0
+        pbar = tqdm(total=100)
+        while response is None:
+            try:
+                status, response = request.next_chunk()
+                if status:
+                    pbar.update(int(status.progress() * 100) - last_status)
+                    last_status = int(status.progress() * 100)
+            except socket.timeout:
+                continue
+            except OSError:
+                continue
+            except error.ServerNotFoundError:
+                continue
+        pbar.update(100 - last_status)
+        pbar.close()
+
+    def create_txt_file(self, name, path, parent='root'):
+        while True:
+            try:
+                file_metadata = {"name": name, "parents": [parent], "mimeType": "txt/csv"}
+                self._service.files().create(body=file_metadata, fields="id").execute()
+                self.update_txt_file(name=name, path=path, parent=parent)
+
             except socket.timeout:
                 continue
             except error.ServerNotFoundError:
