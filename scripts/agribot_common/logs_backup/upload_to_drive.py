@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 from __future__ import print_function
 import argparse
+from httplib2 import error
 import time
 from agribot_common.logs_backup.change_log_handler import ChangeLog
 from agribot_common.logs_backup.graceful_killer import Killer
@@ -33,8 +34,13 @@ def main():
 
     # Recursively uploading all files and folders in given directory
     while not killer.kill_now:
-        handler.log_changes_in_directory(path=path)
-        time.sleep(1)
+        try:
+            handler.log_changes_in_directory(path=path)
+            time.sleep(1)
+        except OSError:
+            killer.kill_now = True
+        except error.HttpLib2Error:
+            killer.kill_now = True
     print("Exited successfully.")
 
 
