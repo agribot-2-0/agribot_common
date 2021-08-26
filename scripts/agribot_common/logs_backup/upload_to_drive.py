@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 from __future__ import print_function
 import argparse
+from os import kill
+import googleapiclient
 from httplib2 import error
 import time
 from agribot_common.logs_backup.change_log_handler import ChangeLog
@@ -40,6 +42,8 @@ def main():
         except OSError:
             killer.kill_now = True
         except error.HttpLib2Error:
+            killer.kill_now = True
+        except googleapiclient.Error:
             killer.kill_now = True
     print("Exited successfully.")
 
