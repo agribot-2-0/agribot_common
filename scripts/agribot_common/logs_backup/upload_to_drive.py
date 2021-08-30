@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 from __future__ import print_function
 import argparse
-import signal
 import time
 from httplib2 import error
 from agribot_common.logs_backup.change_log_handler import ChangeLog
