@@ -27,16 +27,16 @@ def main():
     parser.add_argument('-t',
                         metavar="TIME",
                         required=False,
-                        default=10 * 60,
+                        default=600,
                         help="Time after which the script will print which " +
                         "exception is being handled while in exception loop.")
     args = parser.parse_args()
     path = args.p
     key = args.k
     path_to_yaml = args.yaml
-    time = args.t
-    killer = Killer(time=time)
-    handler = ChangeLog(killer, time=time, path_to_yaml_file=path_to_yaml)
+    timer = int(args.t)
+    killer = Killer(time=timer)
+    handler = ChangeLog(killer, time=timer, path_to_yaml_file=path_to_yaml)
     handler.check_for_token_from_path(key)
 
     # Recursively uploading all files and folders in given directory
