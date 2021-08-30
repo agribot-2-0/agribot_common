@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 from __future__ import print_function
 import argparse
-from httplib2 import error
-import time
 import signal
+import time
+from httplib2 import error
 from agribot_common.logs_backup.change_log_handler import ChangeLog
 from agribot_common.logs_backup.graceful_killer import Killer
 

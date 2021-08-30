@@ -48,8 +48,7 @@ class ChangeLog:  # pylint: disable=old-style-class
                 self._file_id = directory["id"]
 
     def log_changes_in_directory(self, path, dir_id=None):
-        signal.alarm
-        signal.alarm(60)
+        signal.alarm(60 * 10)
         if not self._killer.kill_now:
             print(path)
             if dir_id is None:
@@ -96,7 +95,7 @@ class ChangeLog:  # pylint: disable=old-style-class
             remote_dir_list_with_id = [
                 name for name in self._drive_handler.get_directory_list(parent=dir_id)
             ]
-
+        if not self._killer.kill_now:
             for remote_dir in remote_dir_list_with_id:
                 self.log_changes_in_directory(path=os.path.join(path, remote_dir['name']),
                                               dir_id=remote_dir['id'])
