@@ -14,9 +14,10 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 
 class DriveApiHandler():  # pylint: disable=old-style-class
-    def __init__(self):
+    def __init__(self, killer):
         self._creds = None
         self._service = None
+        self._killer = killer
 
     def check_for_token(self, key_path):
         """Checks for token, if there is none - creates one from key.
@@ -45,9 +46,11 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                     with open(os.path.join(key_path, "token.json"), "w") as token:
                         token.write(self._creds.to_json())
                 self._service = build("drive", "v3", credentials=self._creds)
-            except socket.timeout:
+            except socket.timeout as err:
+                self._killer.exception_message = str(err)
                 continue
-            except error.ServerNotFoundError:
+            except error.ServerNotFoundError as err:
+                self._killer.exception_message = str(err)
                 continue
             else:
                 break
@@ -62,15 +65,17 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                     fields="files(id, name, md5Checksum)",
                 ).execute()
                 return results.get("files", [])
-            except socket.timeout:
+            except socket.timeout as err:
+                self._killer.exception_message = str(err)
                 continue
-            except error.ServerNotFoundError:
+            except error.ServerNotFoundError as err:
+                self._killer.exception_message = str(err)
                 continue
             else:
                 break
 
     def get_directory_list(self, parent='root'):
-        while True:
+        while not self._killer.kill_now:
             try:
                 results = self._service.files().list(
                     q="'" + parent +
@@ -79,15 +84,17 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                     fields="files(id, name)",
                 ).execute()
                 return results.get("files", [])
-            except socket.timeout:
+            except socket.timeout as err:
+                self._killer.exception_message = str(err)
                 continue
-            except error.ServerNotFoundError:
+            except error.ServerNotFoundError as err:
+                self._killer.exception_message = str(err)
                 continue
             else:
                 break
 
     def create_directory(self, name, parent='root'):
-        while True:
+        while not self._killer.kill_now:
             try:
                 file_metadata = {
                     "name": name,
@@ -96,15 +103,17 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 }
                 return self._service.files().create(body=file_metadata,
                                                     fields="id").execute().get('id')
-            except socket.timeout:
+            except socket.timeout as err:
+                self._killer.exception_message = str(err)
                 continue
-            except error.ServerNotFoundError:
+            except error.ServerNotFoundError as err:
+                self._killer.exception_message = str(err)
                 continue
             else:
                 break
 
     def update_txt_file(self, name, path, parent='root'):
-        while True:
+        while not self._killer.kill_now:
             try:
                 print("  Uploading file {}".format(name))
                 temp_file_id = None
@@ -119,9 +128,11 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 request = self._service.files().update(body=file_metadata,
                                                        media_body=media,
                                                        fileId=temp_file_id)
-            except socket.timeout:
+            except socket.timeout as err:
+                self._killer.exception_message = str(err)
                 continue
-            except error.ServerNotFoundError:
+            except error.ServerNotFoundError as err:
+                self._killer.exception_message = str(err)
                 continue
             else:
                 break
@@ -134,25 +145,30 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 if status:
                     pbar.update(int(status.progress() * 100) - last_status)
                     last_status = int(status.progress() * 100)
-            except socket.timeout:
+            except socket.timeout as err:
+                self._killer.exception_message = str(err)
                 continue
-            except OSError:
+            except OSError as err:
+                self._killer.exception_message = str(err)
                 continue
-            except error.ServerNotFoundError:
+            except error.ServerNotFoundError as err:
+                self._killer.exception_message = str(err)
                 continue
         pbar.update(100 - last_status)
         pbar.close()
 
     def create_txt_file(self, name, path, parent='root'):
-        while True:
+        while not self._killer.kill_now:
             try:
                 file_metadata = {"name": name, "parents": [parent], "mimeType": "txt/csv"}
                 self._service.files().create(body=file_metadata, fields="id").execute()
                 self.update_txt_file(name=name, path=path, parent=parent)
 
-            except socket.timeout:
+            except socket.timeout as err:
+                self._killer.exception_message = str(err)
                 continue
-            except error.ServerNotFoundError:
+            except error.ServerNotFoundError as err:
+                self._killer.exception_message = str(err)
                 continue
             else:
                 break

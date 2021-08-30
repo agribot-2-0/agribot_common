@@ -5,6 +5,7 @@ from os import kill
 import googleapiclient
 from httplib2 import error
 import time
+import signal
 from agribot_common.logs_backup.change_log_handler import ChangeLog
 from agribot_common.logs_backup.graceful_killer import Killer
 
@@ -31,20 +32,22 @@ def main():
     path = args.p
     key = args.k
     path_to_yaml = args.yaml
-    handler = ChangeLog(path_to_yaml_file=path_to_yaml)
+    handler = ChangeLog(killer, path_to_yaml_file=path_to_yaml)
     handler.check_for_token_from_path(key)
 
     # Recursively uploading all files and folders in given directory
     while not killer.kill_now:
         try:
             handler.log_changes_in_directory(path=path)
+            signal.alarm(0)
             time.sleep(1)
-        except OSError:
+        except OSError as err:
+            killer.exception_message = str(err)
             killer.kill_now = True
-        except error.HttpLib2Error:
+        except error.HttpLib2Error as err:
+            killer.exception_message = str(err)
             killer.kill_now = True
-        except googleapiclient.Error:
-            killer.kill_now = True
+
     print("Exited successfully.")
 
 

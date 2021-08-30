@@ -2,6 +2,7 @@
 from __future__ import print_function
 import hashlib
 import os
+import signal
 import yaml
 from agribot_common.logs_backup.drive_api_handler import DriveApiHandler
 
@@ -15,8 +16,9 @@ def md5(fname):
 
 
 class ChangeLog:  # pylint: disable=old-style-class
-    def __init__(self, path_to_yaml_file=None):
-        self._drive_handler = DriveApiHandler()
+    def __init__(self, killer, path_to_yaml_file=None):
+        self._killer = killer
+        self._drive_handler = DriveApiHandler(killer)
         self._file_id = None
         self._rsn = None
         with open(path_to_yaml_file) as yaml_file:
@@ -46,49 +48,55 @@ class ChangeLog:  # pylint: disable=old-style-class
                 self._file_id = directory["id"]
 
     def log_changes_in_directory(self, path, dir_id=None):
+        signal.alarm
+        signal.alarm(60)
+        if not self._killer.kill_now:
+            print(path)
+            if dir_id is None:
+                dir_id = self._file_id
 
-        print(path)
-        if dir_id is None:
-            dir_id = self._file_id
+            local_dir_list = [
+                local_dir for local_dir in os.listdir(path)
+                if os.path.isdir(os.path.join(path, local_dir))
+            ]
+            local_file_list = [
+                dict(name=local_file, checksum=md5(os.path.join(path, local_file)))
+                for local_file in os.listdir(path) if os.path.isfile(os.path.join(path, local_file))
+            ]
+            try:
+                remote_dir_list = [
+                    remote_dir['name']
+                    for remote_dir in self._drive_handler.get_directory_list(parent=dir_id)
+                ]
+                remote_file_list = [
+                    dict(name=remote_file['name'], checksum=remote_file['md5Checksum'])
+                    for remote_file in self._drive_handler.get_file_list(parent=dir_id)
+                ]
+            except TypeError as err:
+                self._killer.exception_message = str(err)
 
-        local_dir_list = [
-            local_dir for local_dir in os.listdir(path)
-            if os.path.isdir(os.path.join(path, local_dir))
-        ]
-        local_file_list = [
-            dict(name=local_file, checksum=md5(os.path.join(path, local_file)))
-            for local_file in os.listdir(path) if os.path.isfile(os.path.join(path, local_file))
-        ]
-        remote_dir_list = [
-            remote_dir['name']
-            for remote_dir in self._drive_handler.get_directory_list(parent=dir_id)
-        ]
-        remote_file_list = [
-            dict(name=remote_file['name'], checksum=remote_file['md5Checksum'])
-            for remote_file in self._drive_handler.get_file_list(parent=dir_id)
-        ]
+        if not self._killer.kill_now:
+            for local_file in local_file_list:
+                if not any(remote_file['name'] == local_file['name']
+                           for remote_file in remote_file_list):
+                    self._drive_handler.create_txt_file(path=path,
+                                                        name=local_file['name'],
+                                                        parent=dir_id)
+                elif any((local_file["name"] == remote_file['name']
+                          and local_file['checksum'] != remote_file['checksum'])
+                         for remote_file in remote_file_list):
+                    self._drive_handler.update_txt_file(path=path,
+                                                        name=local_file['name'],
+                                                        parent=dir_id)
+            for local_dir in local_dir_list:
+                if local_dir not in remote_dir_list:
+                    self._drive_handler.create_directory(name=local_dir, parent=dir_id)
 
-        for local_file in local_file_list:
-            if not any(remote_file['name'] == local_file['name']
-                       for remote_file in remote_file_list):
-                self._drive_handler.create_txt_file(path=path,
-                                                    name=local_file['name'],
-                                                    parent=dir_id)
-            elif any((local_file["name"] == remote_file['name']
-                      and local_file['checksum'] != remote_file['checksum'])
-                     for remote_file in remote_file_list):
-                self._drive_handler.update_txt_file(path=path,
-                                                    name=local_file['name'],
-                                                    parent=dir_id)
+        if not self._killer.kill_now:
+            remote_dir_list_with_id = [
+                name for name in self._drive_handler.get_directory_list(parent=dir_id)
+            ]
 
-        for local_dir in local_dir_list:
-            if local_dir not in remote_dir_list:
-                self._drive_handler.create_directory(name=local_dir, parent=dir_id)
-
-        remote_dir_list_with_id = [
-            name for name in self._drive_handler.get_directory_list(parent=dir_id)
-        ]
-
-        for remote_dir in remote_dir_list_with_id:
-            self.log_changes_in_directory(path=os.path.join(path, remote_dir['name']),
-                                          dir_id=remote_dir['id'])
+            for remote_dir in remote_dir_list_with_id:
+                self.log_changes_in_directory(path=os.path.join(path, remote_dir['name']),
+                                              dir_id=remote_dir['id'])
