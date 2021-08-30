@@ -21,7 +21,7 @@ class Killer:  # pylint: disable=old-style-class,too-few-public-methods
         self.kill_now = True
         signal.alarm(0)
 
-    def print_what(self, signal_number, _):
+    def print_what(self, *_):
         if self.exception_message != None:
             print(self.exception_message)
             self.exception_message = None

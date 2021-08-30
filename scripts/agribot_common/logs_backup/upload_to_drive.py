@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 from __future__ import print_function
 import argparse
-from os import kill
-import googleapiclient
 from httplib2 import error
 import time
 import signal
