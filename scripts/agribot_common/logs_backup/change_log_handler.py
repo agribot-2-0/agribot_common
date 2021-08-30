@@ -48,6 +48,7 @@ class ChangeLog:  # pylint: disable=old-style-class
                 self._file_id = directory["id"]
 
     def log_changes_in_directory(self, path, dir_id=None):
+        self._killer.exception_message = None
         signal.alarm(60 * 10)
         if not self._killer.kill_now:
             print(path)

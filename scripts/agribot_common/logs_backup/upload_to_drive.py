@@ -37,7 +37,6 @@ def main():
     while not killer.kill_now:
         try:
             handler.log_changes_in_directory(path=path)
-            signal.alarm(0)
             time.sleep(1)
         except OSError as err:
             killer.exception_message = str(err)
