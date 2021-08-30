@@ -16,11 +16,12 @@ def md5(fname):
 
 
 class ChangeLog:  # pylint: disable=old-style-class
-    def __init__(self, killer, path_to_yaml_file=None):
+    def __init__(self, killer, time, path_to_yaml_file=None):
         self._killer = killer
         self._drive_handler = DriveApiHandler(killer)
         self._file_id = None
         self._rsn = None
+        self._time = time
         with open(path_to_yaml_file) as yaml_file:
             self._rsn = yaml.load(yaml_file, Loader=yaml.FullLoader)['rsn']
 
@@ -49,7 +50,7 @@ class ChangeLog:  # pylint: disable=old-style-class
 
     def log_changes_in_directory(self, path, dir_id=None):
         self._killer.exception_message = None
-        signal.alarm(60 * 10)
+        signal.alarm(self._time)
         if not self._killer.kill_now:
             print(path)
             if dir_id is None:

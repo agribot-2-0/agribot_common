@@ -8,7 +8,6 @@ from agribot_common.logs_backup.graceful_killer import Killer
 
 
 def main():
-    killer = Killer()
     parser = argparse.ArgumentParser(description='Upload logs into drive.')
     parser.add_argument('-p',
                         metavar="PATH_TO_LOGS",
@@ -25,11 +24,19 @@ def main():
                         required=False,
                         default="/home/agribot1/agribot/configs/base/robot.yaml",
                         help="Path to yaml file containing robots serial number (RSN).")
+    parser.add_argument('-t',
+                        metavar="TIME",
+                        required=False,
+                        default=10 * 60,
+                        help="Time after which the script will print which " +
+                        "exception is being handled while in exception loop.")
     args = parser.parse_args()
     path = args.p
     key = args.k
     path_to_yaml = args.yaml
-    handler = ChangeLog(killer, path_to_yaml_file=path_to_yaml)
+    time = args.t
+    killer = Killer(time=time)
+    handler = ChangeLog(killer, time=time, path_to_yaml_file=path_to_yaml)
     handler.check_for_token_from_path(key)
 
     # Recursively uploading all files and folders in given directory

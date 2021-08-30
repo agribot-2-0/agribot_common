@@ -7,7 +7,8 @@ class Killer:  # pylint: disable=old-style-class,too-few-public-methods
     kill_now = False
     exception_message = None
 
-    def __init__(self):
+    def __init__(self, time):
+        self._time = time
         signal.signal(signal.SIGINT, self.exit)
         signal.signal(signal.SIGTERM, self.exit)
         signal.signal(signal.SIGQUIT, self.exit)
@@ -25,4 +26,4 @@ class Killer:  # pylint: disable=old-style-class,too-few-public-methods
         if self.exception_message != None:
             print(self.exception_message)
             self.exception_message = None
-        signal.alarm(10 * 60)
+        signal.alarm(self._time)
