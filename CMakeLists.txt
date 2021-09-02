@@ -37,14 +37,9 @@ add_library(agribot_connection
   src/connection/socket/TcpSocket.cpp
 )
 
-
 add_executable(performance_indices_node src/performance_indices/performance_indices_node.cpp src/performance_indices/PerformanceIndices.cpp)
 target_link_libraries(performance_indices_node ${catkin_LIBRARIES})
 add_dependencies(performance_indices_node ${catkin_EXPORTED_TARGETS})
-
-
-
-
 
 #############
 ## Install ##
