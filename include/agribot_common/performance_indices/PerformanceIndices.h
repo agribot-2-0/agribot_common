@@ -6,7 +6,7 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Float64.h>
-#include <agribot_msgs/ResetPerformanceIndices.h>
+#include <std_srvs/Trigger.h>
 
 class IndicesCalculator
 {
@@ -17,12 +17,12 @@ public:
   void run();
 
 private:
-  void reset(agribot_msgs::ResetPerformanceIndices::Request& req, agribot_msgs::ResetPerformanceIndices::Response& res);
+  bool resetIndices(std_srvs::Trigger::Request& req, std_srvs::Trigger::Response& res);
   ros::Time start;
   ros::Time stop;
   ros::NodeHandle* nh_;
   ros::Subscriber error_subscriber_;
-  ros::Service reset_service_;
+  ros::ServiceServer reset_service_;
   ros::Publisher iae_publisher_;
   ros::Publisher itae_publisher_;
   ros::Publisher ise_publisher_;

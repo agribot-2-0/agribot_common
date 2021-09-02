@@ -5,6 +5,7 @@ add_compile_options(-std=c++17 -Wall -Wextra -pedantic -Werror)
 find_package(catkin REQUIRED COMPONENTS
 roscpp
 std_msgs
+std_srvs
 )
 
 catkin_python_setup()
@@ -15,6 +16,7 @@ catkin_package(
   CATKIN_DEPENDS 
   roscpp
   std_msgs
+  std_srvs
 )
 
 ###########

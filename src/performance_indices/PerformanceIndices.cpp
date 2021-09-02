@@ -28,20 +28,28 @@ IndicesCalculator::IndicesCalculator(ros::NodeHandle* nh)
 {
   nh_ = nh;
   error_subscriber_ = nh_->subscribe("/error", 1, &IndicesCalculator::errorCallback, this);
-  reset_service_ = nh_->advertiseService("reset_performance_indices", reset);
+  reset_service_ =
+      nh_->advertiseService(nh_->getNamespace() + "reset_performance_indices", &IndicesCalculator::resetIndices, this);
   ise_publisher_ = nh->advertise<std_msgs::Float64>(nh_->getNamespace() + "/ise", 1);
   itse_publisher_ = nh->advertise<std_msgs::Float64>(nh_->getNamespace() + "/itse", 1);
   iae_publisher_ = nh->advertise<std_msgs::Float64>(nh_->getNamespace() + "/iae", 1);
   itae_publisher_ = nh->advertise<std_msgs::Float64>(nh_->getNamespace() + "/itae", 1);
-  this->reset();
-}
-
-IndicesCalculator::reset(agribot_msgs::ResetPerformanceIndices::Request& req,
-                         agribot_msgs::ResetPerformanceIndices::Response& res)
-{
   ise_.data = 0;
   iae_.data = 0;
   itse_.data = 0;
   itae_.data = 0;
   start = ros::Time::now();
+}
+
+bool IndicesCalculator::resetIndices(std_srvs::Trigger::Request& req, std_srvs::Trigger::Response& res)
+
+{
+  static_cast<void>(req);
+  ise_.data = 0;
+  iae_.data = 0;
+  itse_.data = 0;
+  itae_.data = 0;
+  start = ros::Time::now();
+  res.success = true;
+  return true;
 }
