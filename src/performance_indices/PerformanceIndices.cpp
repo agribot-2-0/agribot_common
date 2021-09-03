@@ -29,7 +29,7 @@ IndicesCalculator::IndicesCalculator(ros::NodeHandle* nh)
   nh_ = nh;
   error_subscriber_ = nh_->subscribe("/error", 1, &IndicesCalculator::errorCallback, this);
   reset_service_ =
-      nh_->advertiseService(nh_->getNamespace() + "reset_performance_indices", &IndicesCalculator::resetIndices, this);
+      nh_->advertiseService(nh_->getNamespace() + "/reset_performance_indices", &IndicesCalculator::resetIndices, this);
   ise_publisher_ = nh->advertise<std_msgs::Float64>(nh_->getNamespace() + "/ise", 1);
   itse_publisher_ = nh->advertise<std_msgs::Float64>(nh_->getNamespace() + "/itse", 1);
   iae_publisher_ = nh->advertise<std_msgs::Float64>(nh_->getNamespace() + "/iae", 1);
@@ -41,7 +41,8 @@ IndicesCalculator::IndicesCalculator(ros::NodeHandle* nh)
   start = ros::Time::now();
 }
 
-bool IndicesCalculator::resetIndices(const std_srvs::Trigger::Request& req, std_srvs::Trigger::Response* res)
+bool IndicesCalculator::resetIndices(std_srvs::Trigger::Request& req,   // NOLINT (runtime/references)
+                                     std_srvs::Trigger::Response& res)  // NOLINT (runtime/references)
 
 {
   static_cast<void>(req);
@@ -50,6 +51,6 @@ bool IndicesCalculator::resetIndices(const std_srvs::Trigger::Request& req, std_
   itse_.data = 0;
   itae_.data = 0;
   start = ros::Time::now();
-  res->success = true;
+  res.success = true;
   return true;
 }

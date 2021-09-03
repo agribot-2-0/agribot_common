@@ -17,7 +17,7 @@ public:
   void run();
 
 private:
-  bool resetIndices(const std_srvs::Trigger::Request& req, std_srvs::Trigger::Response* res);
+  bool resetIndices(std_srvs::Trigger::Request& req, std_srvs::Trigger::Response& res);  // NOLINT (runtime/references)
   ros::Time start;
   ros::Time stop;
   ros::NodeHandle* nh_;
