@@ -41,7 +41,7 @@ IndicesCalculator::IndicesCalculator(ros::NodeHandle* nh)
   start = ros::Time::now();
 }
 
-bool IndicesCalculator::resetIndices(const std_srvs::Trigger::Request& req, std_srvs::Trigger::Response& res)
+bool IndicesCalculator::resetIndices(const std_srvs::Trigger::Request& req, std_srvs::Trigger::Response* res)
 
 {
   static_cast<void>(req);
@@ -50,6 +50,6 @@ bool IndicesCalculator::resetIndices(const std_srvs::Trigger::Request& req, std_
   itse_.data = 0;
   itae_.data = 0;
   start = ros::Time::now();
-  res.success = true;
+  res->success = true;
   return true;
 }
