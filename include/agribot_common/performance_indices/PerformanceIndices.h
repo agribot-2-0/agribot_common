@@ -12,14 +12,14 @@ class IndicesCalculator
 {
 public:
   explicit IndicesCalculator(ros::NodeHandle* nh);
-  std_msgs::Float64 iae_, itae_, ise_, itse_;
-  void errorCallback(const std_msgs::Float64& msg);
   void run();
 
 private:
+  std_msgs::Float64 iae_, itae_, ise_, itse_;
+  void errorCallback(const std_msgs::Float64& msg);
   bool resetIndices(std_srvs::Trigger::Request& req, std_srvs::Trigger::Response& res);  // NOLINT (runtime/references)
-  ros::Time start;
-  ros::Time stop;
+  ros::Time start_time_;
+  ros::Time stop_time_;
   ros::NodeHandle* nh_;
   ros::Subscriber error_subscriber_;
   ros::ServiceServer reset_service_;

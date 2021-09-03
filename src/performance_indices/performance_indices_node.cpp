@@ -8,6 +8,6 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "performance_indices_node");
   ros::NodeHandle nh("~");
-  IndicesCalculator Calc(&nh);
+  IndicesCalculator calc(&nh);
   Calc.run();
 }
