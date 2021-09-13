@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from __future__ import print_function
 import argparse
 import time
 from httplib2 import error
@@ -51,7 +50,7 @@ def main():
             killer.exception_message = str(err)
             killer.kill_now = True
 
-    print("Exited successfully.")
+    print("Exited successfully.")  # pylint: disable=superfluous-parens
 
 
 if __name__ == "__main__":

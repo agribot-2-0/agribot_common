@@ -51,7 +51,7 @@ class ChangeLog:  # pylint: disable=old-style-class
         self._killer.exception_message = None
         signal.alarm(self._time)
         if not self._killer.kill_now:
-            print(path)  # pylint: disable=
+            print(path)  # pylint: disable=superfluous-parens
             if dir_id is None:
                 dir_id = self._file_id
 

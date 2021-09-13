@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from __future__ import print_function
 import os.path
 import socket
 from google.oauth2.credentials import Credentials
@@ -115,7 +114,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
     def update_txt_file(self, name, path, parent='root'):
         while not self._killer.kill_now:
             try:
-                print("  Uploading file {}".format(name))
+                print("  Uploading file {}".format(name))  # pylint: disable=superfluous-parens
                 temp_file_id = None
                 file_metadata = {"name": name, "mimeType": "txt/csv"}
                 media = MediaFileUpload(os.path.join(path, name),
