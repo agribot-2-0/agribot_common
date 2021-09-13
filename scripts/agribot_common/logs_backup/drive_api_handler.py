@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 import os.path
 import socket
+import time
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google_auth_oauthlib import flow
 from httplib2 import error
-import time
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
