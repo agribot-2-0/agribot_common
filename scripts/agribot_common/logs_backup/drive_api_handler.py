@@ -112,7 +112,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 break
 
     def update_txt_file(self, name, path, parent='root'):
-        while not self._killer.kill_now:
+        while True:
             try:
                 print("  Uploading file {}".format(name))  # pylint: disable=superfluous-parens
                 temp_file_id = None
@@ -137,13 +137,14 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 break
         response = None
         last_status = 0
-        pbar = tqdm(total=100)
         while response is None:
             try:
                 status, response = request.next_chunk()
                 if status:
-                    pbar.update(int(status.progress() * 100) - last_status)
-                    last_status = int(status.progress() * 100)
+                    if int(status.progress() * 100) - last_status >= 10:
+                        print("Uploaded {}%".format(int(status.progress() * 100)))  # pylint: disable=superfluous-parens
+                        last_status = int(status.progress() * 100)
+
             except socket.timeout as err:
                 self._killer.add_exception(str(err))
                 continue
@@ -153,8 +154,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             except error.ServerNotFoundError as err:
                 self._killer.add_exception(str(err))
                 continue
-        pbar.update(100 - last_status)
-        pbar.close()
+        print("  Upload of file {} complete!".format(name))  # pylint: disable=superfluous-parens
 
     def create_txt_file(self, name, path, parent='root'):
         while not self._killer.kill_now:
