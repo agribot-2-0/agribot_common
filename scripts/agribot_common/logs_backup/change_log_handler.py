@@ -15,9 +15,9 @@ def md5(filename):
 
 
 class ChangeLog:  # pylint: disable=old-style-class
-    def __init__(self, killer, time, path_to_yaml_file=None):
+    def __init__(self, killer, time, interval, path_to_yaml_file=None):
         self._killer = killer
-        self._drive_handler = DriveApiHandler(killer)
+        self._drive_handler = DriveApiHandler(killer, interval)
         self._file_id = None
         self._rsn = None
         self._time = time
@@ -50,8 +50,10 @@ class ChangeLog:  # pylint: disable=old-style-class
     def log_changes_in_directory(self, path, dir_id=None):
         self._killer.clear_exception_message_list()
         signal.alarm(self._time)
+
         if not self._killer.kill_now:
             print(path)  # pylint: disable=superfluous-parens
+
             if dir_id is None:
                 dir_id = self._file_id
 

@@ -29,13 +29,19 @@ def main():
                         default=600,
                         help="Time after which the script will print which " +
                         "exception is being handled while in exception loop.")
+    parser.add_argument('-i',
+                        metavar="INTERVAL_BETWEEN_UPLOAD_MESSAGES",
+                        default=600,
+                        help="Time after which a message informing about the" +
+                        " percentage of uploaded file data will be shown.")
     args = parser.parse_args()
     path = args.p
     key = args.k
     path_to_yaml = args.yaml
     timer = int(args.t)
+    interval = args.i
     killer = Killer(time=timer)
-    handler = ChangeLog(killer, time=timer, path_to_yaml_file=path_to_yaml)
+    handler = ChangeLog(killer, time=timer, interval=interval, path_to_yaml_file=path_to_yaml)
     handler.initiate(key)
 
     # Recursively uploading all files and folders in given directory

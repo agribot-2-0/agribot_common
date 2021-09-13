@@ -7,16 +7,17 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google_auth_oauthlib import flow
 from httplib2 import error
+import time
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 
 class DriveApiHandler():  # pylint: disable=old-style-class
-    def __init__(self, killer):
+    def __init__(self, killer, time):
         self._creds = None
         self._service = None
         self._killer = killer
-        self._progress_bar_step = 10
+        self._timeout = time
 
     def check_for_token(self, key_path):
         """Checks for token, if there is none - creates one from key.
@@ -136,14 +137,15 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             else:
                 break
         response = None
-        last_status = 0
+        start_recording_time = time.time()
         while response is None:
             try:
                 status, response = request.next_chunk()
                 if status:
-                    if int(status.progress() * 100) - last_status >= self._progress_bar_step:
+                    wait_duration = time.time() - start_recording_time
+                    if wait_duration > self._timeout:
+                        start_recording_time = time.time()
                         print("Uploaded {}%".format(int(status.progress() * 100)))  # pylint: disable=superfluous-parens
-                        last_status = int(status.progress() * 100)
 
             except socket.timeout as err:
                 self._killer.add_exception(str(err))
