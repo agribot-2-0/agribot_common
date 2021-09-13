@@ -44,10 +44,10 @@ def main():
             handler.log_changes_in_directory(path=path)
             time.sleep(1)
         except OSError as err:
-            killer.exception_message = str(err)
+            killer.add_exception(str(err))
             killer.kill_now = True
         except error.HttpLib2Error as err:
-            killer.exception_message = str(err)
+            killer.add_exception(str(err))
             killer.kill_now = True
 
     print("Exited successfully.")  # pylint: disable=superfluous-parens

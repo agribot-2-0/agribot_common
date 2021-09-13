@@ -48,7 +48,7 @@ class ChangeLog:  # pylint: disable=old-style-class
                 self._file_id = directory["id"]
 
     def log_changes_in_directory(self, path, dir_id=None):
-        self._killer.exception_message = None
+        self._killer.clear_exception_message_list()
         signal.alarm(self._time)
         if not self._killer.kill_now:
             print(path)  # pylint: disable=superfluous-parens
@@ -73,7 +73,7 @@ class ChangeLog:  # pylint: disable=old-style-class
                     for remote_file in self._drive_handler.get_file_list(parent=dir_id)
                 ]
             except TypeError as err:
-                self._killer.exception_message = str(err)
+                self._killer.add_exception(str(err))
 
         if not self._killer.kill_now:
             for local_file in local_file_list:

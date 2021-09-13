@@ -21,6 +21,13 @@ class Killer:  # pylint: disable=old-style-class,too-few-public-methods
         self.kill_now = True
         signal.alarm(0)
 
+    def add_exception(self, exception):
+        if exception not in self.exception_message_list:
+            self.exception_message_list.append(exception)
+
+    def clear_exception_message_list(self):
+        self.exception_message_list = []
+
     def print_what(self, *_):
         if self.exception_message_list:
             print(self.exception_message_list)  # pylint: disable=superfluous-parens
