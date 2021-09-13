@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-from __future__ import print_function
 import hashlib
 import os
 import signal
@@ -52,7 +51,7 @@ class ChangeLog:  # pylint: disable=old-style-class
         self._killer.exception_message = None
         signal.alarm(self._time)
         if not self._killer.kill_now:
-            print(path)
+            print(path)  # pylint: disable=
             if dir_id is None:
                 dir_id = self._file_id
 

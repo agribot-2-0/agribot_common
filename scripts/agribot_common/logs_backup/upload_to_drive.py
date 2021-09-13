@@ -37,7 +37,7 @@ def main():
     timer = int(args.t)
     killer = Killer(time=timer)
     handler = ChangeLog(killer, time=timer, path_to_yaml_file=path_to_yaml)
-    handler.check_for_token_from_path(key)
+    handler.initiate(key)
 
     # Recursively uploading all files and folders in given directory
     while not killer.kill_now:
