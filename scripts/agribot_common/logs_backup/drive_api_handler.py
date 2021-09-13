@@ -7,7 +7,6 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google_auth_oauthlib import flow
 from httplib2 import error
-from tqdm import tqdm
 
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 
