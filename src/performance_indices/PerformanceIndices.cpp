@@ -7,12 +7,12 @@
 void IndicesCalculator::errorCallback(const std_msgs::Float64& msg)
 {
   stop_time_ = ros::Time::now();
-  ros::Duration waitDuration = stop_time_ - start_time_;
+  ros::Duration wait_duration = stop_time_ - start_time_;
   start_time_ = ros::Time::now();
-  ise_.data += pow(msg.data * waitDuration.toSec(), 2);
-  iae_.data += abs(msg.data * waitDuration.toSec());
-  itse_.data += pow(msg.data * pow(waitDuration.toSec(), 2), 2);
-  itae_.data += abs(msg.data) * pow(waitDuration.toSec(), 2);
+  ise_.data += pow(msg.data * wait_duration.toSec(), 2);
+  iae_.data += abs(msg.data * wait_duration.toSec());
+  itse_.data += pow(msg.data * pow(wait_duration.toSec(), 2), 2);
+  itae_.data += abs(msg.data) * pow(wait_duration.toSec(), 2);
   ise_publisher_.publish(ise_);
   iae_publisher_.publish(iae_);
   itse_publisher_.publish(itse_);
