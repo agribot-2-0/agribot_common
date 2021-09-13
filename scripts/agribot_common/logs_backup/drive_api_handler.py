@@ -13,11 +13,11 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 
 class DriveApiHandler():  # pylint: disable=old-style-class
-    def __init__(self, killer, time):
+    def __init__(self, killer, interval):
         self._creds = None
         self._service = None
         self._killer = killer
-        self._timeout = time
+        self._timeout = interval
 
     def check_for_token(self, key_path):
         """Checks for token, if there is none - creates one from key.
