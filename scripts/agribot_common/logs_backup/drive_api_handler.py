@@ -16,6 +16,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
         self._creds = None
         self._service = None
         self._killer = killer
+        self._progress_bar_step = 10
 
     def check_for_token(self, key_path):
         """Checks for token, if there is none - creates one from key.
@@ -140,7 +141,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
             try:
                 status, response = request.next_chunk()
                 if status:
-                    if int(status.progress() * 100) - last_status >= 10:
+                    if int(status.progress() * 100) - last_status >= self._progress_bar_step:
                         print("Uploaded {}%".format(int(status.progress() * 100)))  # pylint: disable=superfluous-parens
                         last_status = int(status.progress() * 100)
 
