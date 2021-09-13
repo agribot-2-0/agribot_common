@@ -25,7 +25,7 @@ def main():
                         default="/home/agribot1/agribot/configs/base/robot.yaml",
                         help="Path to yaml file containing robots serial number (RSN).")
     parser.add_argument('-t',
-                        metavar="TIME",
+                        metavar="EXCEPTION_LOG_PERIOD",
                         required=False,
                         default=600,
                         help="Time after which the script will print which " +

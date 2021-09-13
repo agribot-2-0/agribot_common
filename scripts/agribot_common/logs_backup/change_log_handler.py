@@ -7,10 +7,10 @@ import yaml
 from agribot_common.logs_backup.drive_api_handler import DriveApiHandler
 
 
-def md5(fname):
+def md5(filename):
     hash_md5 = hashlib.md5()
-    with open(fname, "rb") as file_name:
-        for chunk in iter(lambda: file_name.read(4096), b""):
+    with open(filename, "rb") as file_handler:
+        for chunk in iter(lambda: file_handler.read(4096), b""):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
@@ -25,8 +25,8 @@ class ChangeLog:  # pylint: disable=old-style-class
         with open(path_to_yaml_file) as yaml_file:
             self._rsn = yaml.load(yaml_file, Loader=yaml.FullLoader)['rsn']
 
-    def check_for_token_from_path(self, new_key):
-        self._drive_handler.check_for_token(new_key)
+    def initiate(self, path_to_api_key):
+        self._drive_handler.check_for_token(path_to_api_key)
         self.initiate_file_id()
 
     def initiate_file_id(self):
@@ -97,7 +97,6 @@ class ChangeLog:  # pylint: disable=old-style-class
             remote_dir_list_with_id = [
                 name for name in self._drive_handler.get_directory_list(parent=dir_id)
             ]
-        if not self._killer.kill_now:
             for remote_dir in remote_dir_list_with_id:
                 self.log_changes_in_directory(path=os.path.join(path, remote_dir['name']),
                                               dir_id=remote_dir['id'])

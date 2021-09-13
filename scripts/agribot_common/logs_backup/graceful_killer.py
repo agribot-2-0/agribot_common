@@ -5,10 +5,10 @@ import signal
 
 class Killer:  # pylint: disable=old-style-class,too-few-public-methods
     kill_now = False
-    exception_message = None
+    exception_message_list = []
 
     def __init__(self, time):
-        self._time = time
+        self._exception_log_period = time
         signal.signal(signal.SIGINT, self.exit)
         signal.signal(signal.SIGTERM, self.exit)
         signal.signal(signal.SIGQUIT, self.exit)
@@ -23,7 +23,7 @@ class Killer:  # pylint: disable=old-style-class,too-few-public-methods
         signal.alarm(0)
 
     def print_what(self, *_):
-        if self.exception_message != None:
-            print(self.exception_message)
-            self.exception_message = None
-        signal.alarm(self._time)
+        if self.exception_message_list:
+            print(self.exception_message_list)
+            self.exception_message_list = []
+        signal.alarm(self._exception_log_period)
