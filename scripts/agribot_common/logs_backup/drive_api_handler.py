@@ -17,7 +17,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
         self._creds = None
         self._service = None
         self._killer = killer
-        self._timeout = interval
+        self._progress_interval = interval
 
     def check_for_token(self, key_path):
         """Checks for token, if there is none - creates one from key.
@@ -143,7 +143,7 @@ class DriveApiHandler():  # pylint: disable=old-style-class
                 status, response = request.next_chunk()
                 if status:
                     wait_duration = time.time() - start_recording_time
-                    if wait_duration > self._timeout:
+                    if wait_duration > self._progress_interval:
                         start_recording_time = time.time()
                         print("Uploaded {}%".format(int(status.progress() * 100)))  # pylint: disable=superfluous-parens
 
