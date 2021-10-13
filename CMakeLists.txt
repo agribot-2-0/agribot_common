@@ -3,9 +3,10 @@ project(agribot_common)
 add_compile_options(-std=c++17 -Wall -Wextra -pedantic -Werror)
 
 find_package(catkin REQUIRED COMPONENTS
-roscpp
-std_msgs
-std_srvs
+  roscpp
+  std_msgs
+  std_srvs
+  rosbag
 )
 
 catkin_python_setup()
@@ -14,6 +15,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME} agribot_common agribot_connection
   CATKIN_DEPENDS 
+  rosbag
   roscpp
   std_msgs
   std_srvs
@@ -43,6 +45,14 @@ add_executable(performance_indices_node src/performance_indices/performance_indi
 target_link_libraries(performance_indices_node ${catkin_LIBRARIES})
 add_dependencies(performance_indices_node ${catkin_EXPORTED_TARGETS})
 
+add_executable(agribot_utils_rosbag_snapshot_processor
+  src/tools/rosbag_snapshot_processor/RosbagSnapshotProcessor.cpp
+  src/tools/rosbag_snapshot_processor/SaveImageProcessor.cpp
+)
+target_link_libraries(agribot_utils_rosbag_snapshot_processor ${catkin_LIBRARIES})
+add_dependencies(agribot_utils_rosbag_snapshot_processor ${catkin_EXPORTED_TARGETS})
+
+
 #############
 ## Install ##
 #############
@@ -51,6 +61,10 @@ install(TARGETS agribot_common agribot_connection performance_indices_node
     ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
     RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(TARGETS agribot_utils_rosbag_snapshot_processor
+    RUNTIME DESTINATION $ENV{AGRIBOT_HOME}/agribot/bin/utils/rosbag
 )
 
 ## Mark cpp header files for installation
