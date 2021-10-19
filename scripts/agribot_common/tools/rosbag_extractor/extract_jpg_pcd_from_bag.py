@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
-from os import close
 import rosbag
 import rospy
 import tf2_py
 import tf2_ros
 from tf2_sensor_msgs.tf2_sensor_msgs import do_transform_cloud
 import sensor_msgs
-from sensor_msgs.msg import PointCloud2, PointField
+from sensor_msgs.msg import PointField
 import sensor_msgs.point_cloud2 as pc2
-from std_msgs.msg import Header
 
 import numpy as np
 from cv_bridge import CvBridge
@@ -61,7 +59,6 @@ def convert_ros_cloud_to_open3d(ros_cloud):
 
         # combine
         open3d_cloud.points = open3d.utility.Vector3dVector(np.array(xyz))
-
         open3d_cloud.colors = open3d.utility.Vector3dVector(np.array(rgb) / 255.0)
     elif "intensity" in field_names:
         xyz = [(x, y, z) for x, y, z, intensity in cloud_data]  # get xyz
@@ -107,7 +104,7 @@ def find_closest_tf(tf_buffer_core, pointcloud, target_frame):
     return transform
 
 
-INPUT_BAG_PATH = '/home/olek/agribot/logs/08_2021/11_08_2021/begin_end_line_v1.bag'
+INPUT_BAG_PATH = '/home/michalina/wisniowy1.bag'
 IMAGE_TOPIC = '/zed2_node/rgb/image_rect_color'
 # POINTCLOUD_TOPIC = '/agribot/obstacle_detection/front/3d/stereo_camera/point_cloud'
 POINTCLOUD_TOPIC = '/agribot/obstacle_detection/front/3d/lidar/point_cloud'
