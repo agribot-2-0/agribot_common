@@ -66,8 +66,6 @@ def convert_ros_cloud_to_open3d(ros_cloud):
                 rgb.append((unpack_rgb_uint32(_rgb)))
 
         # combine
-        if (len(xyz) == 0):
-            return None
         open3d_cloud.points = open3d.utility.Vector3dVector(np.array(xyz))
         open3d_cloud.colors = open3d.utility.Vector3dVector(np.array(rgb) / 255.0)
     elif "intensity" in field_names:
@@ -76,14 +74,10 @@ def convert_ros_cloud_to_open3d(ros_cloud):
         for x, y, z, intensity in cloud_data:
             xyz.append((x, y, z))
             rgb.append((intensity, intensity, intensity))
-        if (len(xyz) == 0):
-            return None
         open3d_cloud.points = open3d.utility.Vector3dVector(np.array(xyz))
         open3d_cloud.colors = open3d.utility.Vector3dVector(np.array(rgb) / 255.0)
     else:
         xyz = [(x, y, z) for x, y, z in cloud_data]  # get xyz
-        if (len(xyz) == 0):
-            return None
         open3d_cloud.points = open3d.utility.Vector3dVector(np.array(xyz))
 
     # return
@@ -209,22 +203,16 @@ with rosbag.Bag(input_bag_path) as inbag:
         else:
             logging.warn('Unsupported topic')
 
-if (len(pointclouds) == 0):
-    logging.warn('There is no pointclouds on given topic.')
-    closest_img_idx = save_image(images)
-    logging.info('Saved image #{} from time {} for bag {}'.format(closest_img_idx, snapshot_time,
-                                                                  input_bag_path))
-elif (len(images) == 0):
-    logging.warn('There is no images on given topic.')
+if (len(pointclouds) > 0):
     closest_pointcloud_idx = save_pointcloud(pointclouds)
     logging.info('Saved pointcloud #{} from time {} for bag {}'.format(
         closest_pointcloud_idx, snapshot_time, input_bag_path))
-elif (len(pointclouds) == 0 and len(images) == 0):
-    logging.error(
-        'There is no images or pointclouds on given topic in bag{}.Exiting.'.format(input_bag_path))
-    exit
 else:
+    logging.warn('There is no pointclouds on given topic.')
+
+if (len(images) > 0):
     closest_img_idx = save_image(images)
-    closest_pointcloud_idx = save_pointcloud(pointclouds)
-    logging.info('Saved image #{} and pointcloud #{} from time {} for bag {}'.format(
-        closest_img_idx, closest_pointcloud_idx, snapshot_time, input_bag_path))
+    logging.info('Saved image #{} from time {} for bag {}'.format(closest_img_idx, snapshot_time,
+                                                                  input_bag_path))
+else:
+    logging.warn('There is no images on given topic.')
