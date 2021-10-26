@@ -47,13 +47,11 @@ def convert_ros_cloud_to_open3d(ros_cloud):
 
     # Get cloud data from ros_cloud
     field_names = [field.name for field in ros_cloud.fields]
-    cloud_data = pc2.read_points_list(ros_cloud, skip_nans=True, field_names=field_names)
+    cloud_data = pc2.read_points(ros_cloud, skip_nans=True, field_names=field_names)
 
     # Check empty
     open3d_cloud = open3d.geometry.PointCloud()
-    if len(cloud_data) == 0:
-        print("Converting an empty cloud")
-        return None
+
     # Set open3d_cloud
     if "rgb" in field_names:
         IDX_RGB_IN_FIELD = 3  # x, y, z, rgb
@@ -68,6 +66,8 @@ def convert_ros_cloud_to_open3d(ros_cloud):
                 rgb.append((unpack_rgb_uint32(_rgb)))
 
         # combine
+        if (len(xyz) == 0):
+            return None
         open3d_cloud.points = open3d.utility.Vector3dVector(np.array(xyz))
         open3d_cloud.colors = open3d.utility.Vector3dVector(np.array(rgb) / 255.0)
     elif "intensity" in field_names:
@@ -76,11 +76,14 @@ def convert_ros_cloud_to_open3d(ros_cloud):
         for x, y, z, intensity in cloud_data:
             xyz.append((x, y, z))
             rgb.append((intensity, intensity, intensity))
-
+        if (len(xyz) == 0):
+            return None
         open3d_cloud.points = open3d.utility.Vector3dVector(np.array(xyz))
         open3d_cloud.colors = open3d.utility.Vector3dVector(np.array(rgb) / 255.0)
     else:
         xyz = [(x, y, z) for x, y, z in cloud_data]  # get xyz
+        if (len(xyz) == 0):
+            return None
         open3d_cloud.points = open3d.utility.Vector3dVector(np.array(xyz))
 
     # return
@@ -115,6 +118,45 @@ def find_closest_tf(tf_buffer_core, pointcloud, target_frame):
                                                          rospy.Time(0))
 
     return transform
+
+
+def save_image(images):
+    image_time_diffs = np.array([abs(snapshot_time - t) for t, img in images])
+    closest_img_idx = np.argmin(image_time_diffs)
+    closest_img = images[closest_img_idx][1]
+    bridge = CvBridge()
+    cv2_img = bridge.imgmsg_to_cv2(closest_img, "bgr8")
+    cv2.imwrite('{}.jpg'.format(output_name), cv2_img)
+
+    return closest_img_idx
+
+
+def save_pointcloud(pointclouds):
+    pointcloud_time_diffs = np.array([abs(snapshot_time - t) for t, img in pointclouds])
+    closest_pointcloud_idx = np.argmin(pointcloud_time_diffs)
+    closest_pointcloud = pointclouds[closest_pointcloud_idx][1]
+    if closest_pointcloud.header.frame_id != pc_target_frame:
+        try:
+            transform = find_closest_tf(tf_buffer_core, closest_pointcloud, pc_target_frame)
+            closest_pointcloud_in_target_frame = do_transform_cloud(closest_pointcloud, transform)
+        except Exception as e:
+            logging.error(traceback.format_exc())
+            exit()
+
+        logging.info('Transformed pointcloud from {} to {} frame'.format(
+            closest_pointcloud.header.frame_id, pc_target_frame))
+
+    else:
+        logging.info('Frame ids match, no transform necessary...')
+        closest_pointcloud_in_target_frame = closest_pointcloud
+    # Save pointcloud
+    received_open3d_cloud = convert_ros_cloud_to_open3d(closest_pointcloud_in_target_frame)
+
+    # write to file
+    output_filename = output_name + ".pcd"
+    open3d.io.write_point_cloud(output_filename, received_open3d_cloud)
+
+    return closest_pointcloud_idx
 
 
 parser = argparse.ArgumentParser()
@@ -162,41 +204,22 @@ with rosbag.Bag(input_bag_path) as inbag:
         else:
             logging.warn('Unsupported topic')
 
-image_time_diffs = np.array([abs(snapshot_time - t) for t, img in images])
-closest_img_idx = np.argmin(image_time_diffs)
-pointcloud_time_diffs = np.array([abs(snapshot_time - t) for t, img in pointclouds])
-closest_pointcloud_idx = np.argmin(pointcloud_time_diffs)
-
-closest_img = images[closest_img_idx][1]
-closest_pointcloud = pointclouds[closest_pointcloud_idx][1]
-
-# Transform pointcloud to target frame
-if closest_pointcloud.header.frame_id != pc_target_frame:
-    try:
-        transform = find_closest_tf(tf_buffer_core, closest_pointcloud, pc_target_frame)
-        closest_pointcloud_in_target_frame = do_transform_cloud(closest_pointcloud, transform)
-    except Exception as e:
-        logging.error(traceback.format_exc())
-        exit()
-
-    logging.info('Transformed pointcloud from {} to {} frame'.format(
-        closest_pointcloud.header.frame_id, pc_target_frame))
-
+if (len(pointclouds) == 0):
+    logging.warn('There is no pointclouds on given topic.')
+    closest_img_idx = save_image(images)
+    logging.info('Saved image #{} from time {} for bag {}'.format(closest_img_idx, snapshot_time,
+                                                                  input_bag_path))
+elif (len(images) == 0):
+    logging.warn('There is no images on given topic.')
+    closest_pointcloud_idx = save_pointcloud(pointclouds)
+    logging.info('Saved pointcloud #{} from time {} for bag {}'.format(
+        closest_pointcloud_idx, snapshot_time, input_bag_path))
+elif (len(pointclouds) == 0 and len(images) == 0):
+    logging.error(
+        'There is no images or pointclouds on given topic in bag{}.Exiting.'.format(input_bag_path))
+    exit
 else:
-    logging.info('Frame ids match, no transform necessary...')
-    closest_pointcloud_in_target_frame = closest_pointcloud
-
-# Save image
-bridge = CvBridge()
-cv2_img = bridge.imgmsg_to_cv2(closest_img, "bgr8")
-cv2.imwrite('{}.jpg'.format(output_name), cv2_img)
-
-# Save pointcloud
-received_open3d_cloud = convert_ros_cloud_to_open3d(closest_pointcloud_in_target_frame)
-
-# write to file
-output_filename = output_name + ".pcd"
-open3d.io.write_point_cloud(output_filename, received_open3d_cloud)
-
-logging.info('Saved image #{} and pointcloud #{} from time {} for bag {}'.format(
-    closest_img_idx, closest_pointcloud_idx, snapshot_time, input_bag_path))
+    closest_img_idx = save_image(images)
+    closest_pointcloud_idx = save_pointcloud(pointclouds)
+    logging.info('Saved image #{} and pointcloud #{} from time {} for bag {}'.format(
+        closest_img_idx, closest_pointcloud_idx, snapshot_time, input_bag_path))
