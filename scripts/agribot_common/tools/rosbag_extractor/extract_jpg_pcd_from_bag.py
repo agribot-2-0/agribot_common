@@ -150,6 +150,11 @@ def save_pointcloud(pointclouds):
         logging.info('Frame ids match, no transform necessary...')
         closest_pointcloud_in_target_frame = closest_pointcloud
     # Save pointcloud
+    if (closest_pointcloud_in_target_frame.width == 0
+            or closest_pointcloud_in_target_frame.height == 0):
+        logging.error(
+            'Pointcloud {} has no width or heights - assuiming empty.'.format(pc_target_frame))
+        return None
     received_open3d_cloud = convert_ros_cloud_to_open3d(closest_pointcloud_in_target_frame)
 
     # write to file
