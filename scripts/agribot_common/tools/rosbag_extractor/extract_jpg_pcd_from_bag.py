@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from os import close
 import rosbag
 import rospy
 import tf2_py
@@ -13,14 +14,14 @@ import numpy as np
 from cv_bridge import CvBridge
 import cv2
 import open3d
-import ctypes  # convert float to uint32
+import ctypes
 
 import traceback
 import logging
 import warnings
 import argparse
 
-# The data structure of each point in ros PointCloud2: 16 bits = x + y + z + rgb
+# The data structure of each point in ROS PointCloud2: 16 bits = x + y + z + rgb
 FIELDS_XYZ = [
     PointField(name='x', offset=0, datatype=PointField.FLOAT32, count=1),
     PointField(name='y', offset=4, datatype=PointField.FLOAT32, count=1),
@@ -31,13 +32,13 @@ FIELDS_XYZRGB = FIELDS_XYZ + \
 
 
 # bit operations
-def unpack_rgb_uint32(rgb_uint32):
+def unpack_uint32_to_rgb(rgb_uint32):
     return ((rgb_uint32 & 0x00ff0000) >> 16, (rgb_uint32 & 0x0000ff00) >> 8,
             (rgb_uint32 & 0x000000ff))
 
 
-def unpack_rgb_float(rgb_float):
-    return unpack_rgb_uint32(
+def unpack_float_to_rgb(rgb_float):
+    return unpack_uint32_to_rgb(
         int(
             ctypes.cast(ctypes.pointer(ctypes.c_float(rgb_float)),
                         ctypes.POINTER(ctypes.c_uint32)).contents.value))
@@ -61,9 +62,9 @@ def convert_ros_cloud_to_open3d(ros_cloud):
         for x, y, z, _rgb in cloud_data:
             xyz.append((x, y, z))
             if type(cloud_data[0][IDX_RGB_IN_FIELD]) == float:
-                rgb.append((unpack_rgb_float(_rgb)))
+                rgb.append((unpack_float_to_rgb(_rgb)))
             else:
-                rgb.append((unpack_rgb_uint32(_rgb)))
+                rgb.append((unpack_uint32_to_rgb(_rgb)))
 
         # combine
         open3d_cloud.points = open3d.utility.Vector3dVector(np.array(xyz))
@@ -114,18 +115,22 @@ def find_closest_tf(tf_buffer_core, pointcloud, target_frame):
     return transform
 
 
-def save_image(images):
+def return_closest_image(images):
     image_time_diffs = np.array([abs(snapshot_time - t) for t, img in images])
     closest_img_idx = np.argmin(image_time_diffs)
     closest_img = images[closest_img_idx][1]
+    return closest_img, closest_img_idx
+
+
+def save_image(closest_img, closest_img_idx):
     bridge = CvBridge()
     cv2_img = bridge.imgmsg_to_cv2(closest_img, "bgr8")
     cv2.imwrite('{}.jpg'.format(output_name), cv2_img)
+    logging.info('Saved image #{} from time {} for bag {}'.format(closest_img_idx, snapshot_time,
+                                                                  input_bag_path))
 
-    return closest_img_idx
 
-
-def save_pointcloud(pointclouds):
+def return_closest_pointcloud(pointclouds):
     pointcloud_time_diffs = np.array([abs(snapshot_time - t) for t, img in pointclouds])
     closest_pointcloud_idx = np.argmin(pointcloud_time_diffs)
     closest_pointcloud = pointclouds[closest_pointcloud_idx][1]
@@ -143,19 +148,22 @@ def save_pointcloud(pointclouds):
     else:
         logging.info('Frame ids match, no transform necessary...')
         closest_pointcloud_in_target_frame = closest_pointcloud
-    # Save pointcloud
+
+    return closest_pointcloud_in_target_frame, closest_pointcloud_idx
+
+
+def save_pointcloud(closest_pointcloud_in_target_frame, closest_pointcloud_idx):
     if (closest_pointcloud_in_target_frame.width == 0
             or closest_pointcloud_in_target_frame.height == 0):
         logging.error(
-            'Pointcloud {} has no width or heights - assuiming empty.'.format(pc_target_frame))
+            'Pointcloud at header time {} has no width or heights - assuiming empty.'.format(
+                closest_pointcloud_in_target_frame.header.stamp))
         return None
     received_open3d_cloud = convert_ros_cloud_to_open3d(closest_pointcloud_in_target_frame)
-
-    # write to file
     output_filename = output_name + ".pcd"
     open3d.io.write_point_cloud(output_filename, received_open3d_cloud)
-
-    return closest_pointcloud_idx
+    logging.info('Saved pointcloud #{} from time {} for bag {}'.format(
+        closest_pointcloud_idx, snapshot_time, input_bag_path))
 
 
 parser = argparse.ArgumentParser()
@@ -204,15 +212,13 @@ with rosbag.Bag(input_bag_path) as inbag:
             logging.warn('Unsupported topic')
 
 if (len(pointclouds) > 0):
-    closest_pointcloud_idx = save_pointcloud(pointclouds)
-    logging.info('Saved pointcloud #{} from time {} for bag {}'.format(
-        closest_pointcloud_idx, snapshot_time, input_bag_path))
+    closest_pointcloud, closest_pointcloud_idx = return_closest_pointcloud(pointclouds)
+    save_pointcloud(closest_pointcloud, closest_pointcloud_idx)
 else:
     logging.warn('There is no pointclouds on given topic.')
 
 if (len(images) > 0):
-    closest_img_idx = save_image(images)
-    logging.info('Saved image #{} from time {} for bag {}'.format(closest_img_idx, snapshot_time,
-                                                                  input_bag_path))
+    closest_img, closest_img_idx = return_closest_image(images)
+    save_image(closest_img, closest_img_idx)
 else:
     logging.warn('There is no images on given topic.')
