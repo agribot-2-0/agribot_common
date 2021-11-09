@@ -108,7 +108,9 @@ def find_closest_tf(tf_buffer_core, pointcloud, target_frame):
         transform = tf_buffer_core.lookup_transform_core(target_frame, pointcloud.header.frame_id,
                                                          pointcloud.header.stamp)
     except tf2_ros.ExtrapolationException as e:
-        logging.info('{}. Taking latest instead'.format(e))
+        logging.info(
+            '{}. Taking latest instead. This behavior might cause problems for nonstatic tf tree.'.
+            format(e))
         transform = tf_buffer_core.lookup_transform_core(target_frame, pointcloud.header.frame_id,
                                                          rospy.Time(0))
 
@@ -122,12 +124,11 @@ def return_closest_image(images):
     return closest_img, closest_img_idx
 
 
-def save_image(closest_img, closest_img_idx):
+def save_image(closest_img):
     bridge = CvBridge()
     cv2_img = bridge.imgmsg_to_cv2(closest_img, "bgr8")
     cv2.imwrite('{}.jpg'.format(output_name), cv2_img)
-    logging.info('Saved image #{} from time {} for bag {}'.format(closest_img_idx, snapshot_time,
-                                                                  input_bag_path))
+    logging.info('Saved image from time {} for bag {}'.format(snapshot_time, input_bag_path))
 
 
 def return_closest_pointcloud(pointclouds):
@@ -152,7 +153,7 @@ def return_closest_pointcloud(pointclouds):
     return closest_pointcloud_in_target_frame, closest_pointcloud_idx
 
 
-def save_pointcloud(closest_pointcloud_in_target_frame, closest_pointcloud_idx):
+def save_pointcloud(closest_pointcloud_in_target_frame):
     if (closest_pointcloud_in_target_frame.width == 0
             or closest_pointcloud_in_target_frame.height == 0):
         logging.error(
@@ -162,8 +163,7 @@ def save_pointcloud(closest_pointcloud_in_target_frame, closest_pointcloud_idx):
     received_open3d_cloud = convert_ros_cloud_to_open3d(closest_pointcloud_in_target_frame)
     output_filename = output_name + ".pcd"
     open3d.io.write_point_cloud(output_filename, received_open3d_cloud)
-    logging.info('Saved pointcloud #{} from time {} for bag {}'.format(
-        closest_pointcloud_idx, snapshot_time, input_bag_path))
+    logging.info('Saved pointcloud from time {} for bag {}'.format(snapshot_time, input_bag_path))
 
 
 parser = argparse.ArgumentParser()
@@ -213,12 +213,12 @@ with rosbag.Bag(input_bag_path) as inbag:
 
 if (len(pointclouds) > 0):
     closest_pointcloud, closest_pointcloud_idx = return_closest_pointcloud(pointclouds)
-    save_pointcloud(closest_pointcloud, closest_pointcloud_idx)
+    save_pointcloud(closest_pointcloud)
 else:
     logging.warn('There is no pointclouds on given topic.')
 
 if (len(images) > 0):
     closest_img, closest_img_idx = return_closest_image(images)
-    save_image(closest_img, closest_img_idx)
+    save_image(closest_img)
 else:
     logging.warn('There is no images on given topic.')
