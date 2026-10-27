@@ -6,7 +6,7 @@
   <maintainer email="m.wiadomski@agribot.eu">Michal Wiadomski</maintainer>
   <maintainer email="l.chojnacki@agribot.eu">Lukasz Chojnacki</maintainer>
 
-  <license>BSD</license>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>
